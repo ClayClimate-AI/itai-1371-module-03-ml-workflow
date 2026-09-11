@@ -1,179 +1,99 @@
-<!--
-  README — LIVING DOCUMENT.
-  Updated incrementally at every checkpoint alongside progress.md and checkpoints.md.
-  Merged into the build process per Pilot directive; do not deviate.
-  Badges + Build Progress + Checkpoint Ledger reflect the CURRENT state of the build.
--->
-
-# Module 3 — Machine Learning Workflow & Types of Learning
+# Wine Classification — ML Workflow (ITAI 1371, Module 3)
 
 <p>
   <img alt="Course" src="https://img.shields.io/badge/Course-ITAI%201371-0A66C2">
   <img alt="Module" src="https://img.shields.io/badge/Module-03-1F6FEB">
-  <img alt="Subject" src="https://img.shields.io/badge/Subject-Wine%20Classification-8E44AD">
-  <img alt="Points" src="https://img.shields.io/badge/Points-100-success">
-  <img alt="Due" src="https://img.shields.io/badge/Due-Thu%2011%3A59pm-important">
-  <img alt="Setup Gate" src="https://img.shields.io/badge/Setup%20Gate-PASS-brightgreen">
-  <img alt="Python" src="https://img.shields.io/badge/Python-3.14.6-3776AB?logo=python&logoColor=white">
+  <img alt="Task" src="https://img.shields.io/badge/Task-Wine%20Classification-8E44AD">
+  <img alt="Python" src="https://img.shields.io/badge/Python-3.12%20%7C%203.14-3776AB?logo=python&logoColor=white">
+  <img alt="CI" src="https://img.shields.io/badge/CI-GitHub%20Actions-2088FF?logo=githubactions&logoColor=white">
+  <img alt="License" src="https://img.shields.io/badge/License-Educational-lightgrey">
 </p>
 
-**Build status.** The notebook (25 cells: 12 code / 13 markdown) is executed under a spec-driven,
-gate-based protocol — the *Cell-by-Cell Master Blueprint* reinforced by the *Zero-Defect* architecture,
-with a decision trail in ADRs 0001–0004. Work happens on `build/lab03-josephclay` (never on `main`,
-which is Production/Locked) and integrates via PR → CI → merge. Currently past the C0 contract gate:
-Cell 3 (imports) is verified and committed, and the local pre-commit gate plus CI are active.
-
-> **This README is a living document.** It updates incrementally as the build advances, in lockstep
-> with [`progress.md`](progress.md) and [`checkpoints.md`](checkpoints.md). Together these three files
-> form a step-by-step, professor-visible trail of exactly what was done, plus clean resume points.
-
----
+An end-to-end machine-learning workflow on the classic **Wine** dataset: load and explore the data,
+run exploratory analysis, train and compare classifiers, and evaluate the results. The work is
+organized as a single Jupyter notebook backed by a reproducible environment, contract tests, and
+continuous integration.
 
 ## Overview
 
-This project executes the Module 3 lab notebook (`Module_03_Lab_Exercise.ipynb` — Wine dataset
-classification) under a disciplined, gate-driven engineering protocol rather than ad-hoc cell running.
-The **System** (immutable process: guardrails, builder loop, human checkpoints) is decoupled from the
-**Subject** (the Lab 03 ML payload). The guiding principle: *a green checkmark is not proof; a contract is proof.*
+The notebook walks through the full supervised-learning pipeline end to end:
 
-- **Authoritative protocol:** Ultimate Cell-by-Cell Master Blueprint for ML Execution
-- **Reinforcement:** Zero-Defect ML Architecture deck (adds the C5 Export Gate)
-- **Pilot (sole execution/reflection authority):** Joseph Clay
-- **Agent (proposes, pre-fills, implements to contract):** Kiro
+1. Load the Wine dataset (178 samples, 13 chemical features, 3 cultivar classes).
+2. Explore structure and class distribution.
+3. Prepare features, split into train/test, and standardize (scaler fit on the training set only).
+4. Train two models — Logistic Regression and a Decision Tree — and compare them.
+5. Evaluate with accuracy, a classification report, and a confusion matrix, then interpret the results.
 
----
+## Dataset
 
-## Deliverables
+The [Wine recognition dataset](https://scikit-learn.org/stable/datasets/toy_dataset.html#wine-recognition-dataset)
+ships with scikit-learn (`sklearn.datasets.load_wine`). It contains 178 samples described by 13
+continuous chemical-analysis features, labeled across 3 classes. No external download is required.
 
-| # | Deliverable | Status | Naming convention |
-| --- | --- | --- | --- |
-| 1 | Executed notebook exported as PDF (all cells + outputs) | ⏳ Not started | `L03_SingleEpoch_ITAI1371.pdf` |
-| 2 | Reflective journal (1–2 pages) | ⏳ Not started | `L03Journal_R_SingleEpoch_ITAI1371.pdf` |
-| 3 | Contribution journal (1–2 pages) | ⏳ Not started | `L03Journal_C_SingleEpoch_ITAI1371.pdf` |
-
----
-
-## Build Progress
+## Project structure
 
 ```
-[██████████░░░░░░░░░░░░░░]  Phase 1: Pre-Flight Setup   (in progress)
-[░░░░░░░░░░░░░░░░░░░░░░░░]  Phase 2: Builder Loop        (locked until C0)
-[░░░░░░░░░░░░░░░░░░░░░░░░]  Phase 3: Delivery + C5 Export (locked)
+.
+├── Module_03_Lab_Exercise.ipynb   # main notebook (analysis + models)
+├── requirements.txt               # Python dependencies
+├── scripts/setup_gate.py          # environment / dependency check
+├── src/                           # supporting implementation code
+├── tests/                         # contract tests
+├── specs/                         # product & technical specifications
+├── docs/adr/                      # architecture decision records
+└── .github/workflows/ci.yml       # CI pipeline
 ```
 
-### Setup checklist (through C0)
-- [x] Context pass over all source documents (blueprint, deck, notebook, instructions)
-- [x] Bubble created — `docs/adr`, `specs`, `src`, `tests`, `.venv`
-- [x] Living State initialized — `progress.md`, `checkpoints.md`, and this README
-- [x] Collaborative Git workflow merged — branch `build/lab03-josephclay`, ADR 0001, CI workflow
-- [x] Specs drafted — `Product_Spec.md`, `Tech_Spec.md` (group name `SingleEpoch` locked)
-- [x] Step 0 — P-I-O-F + Definition of Done + Scope/Constraints (`docs/STEP0_Initial_Contract.md`)
-- [x] Layer 1 Setup Gate — ✅ PASS (deps present, diff clean, `load_wine` OK)
-- [ ] **C0 Human Gate** — Pilot sign-off (WAIT; no construction before this)
+## Getting started
 
----
+Requires Python 3.12+ (developed on 3.14; CI runs on 3.12).
 
-## Guardrail Ladder
+```bash
+# 1. Create and activate a virtual environment
+python -m venv .venv
+source .venv/bin/activate            # Windows: .venv\Scripts\activate
 
-| Layer | Gate | Meaning |
-| --- | --- | --- |
-| L0 | Bubble | Isolated project-level virtual environment (`.venv`) |
-| L1 | Setup Gate | Validates 100% dependency presence before execution |
-| L2 | P-I-O-F (C1) | Execution sequence planned & approved before code |
-| L3 | Tests (TDD) | Known-bad inputs forced to fail |
-| L4 | Asserts | Live integrity checks bounding every transform |
-| L5 | CI + Hooks | Re-execution on a clean, objective machine state (CI) **and** a local pre-commit gate (L1+L3) that runs before every commit — see ADR 0003 |
+# 2. Install dependencies
+pip install -r requirements.txt
 
-## Checkpoint Ledger (summary)
+# 3. (Optional) verify the environment is set up correctly
+python scripts/setup_gate.py
 
-| Gate | Name | Status |
-| --- | --- | --- |
-| C0 | Initial Contract | 🟡 PENDING |
-| C1 | P-I-O-F (per unit) | ⚪ Not reached |
-| C2 | Atomic Commit | ⚪ Not reached |
-| C3 | Debugging / ADR | ⚪ Not reached |
-| C4 | Reflection Interview | ⚪ Not reached |
-| C5 | Export Gate | ⚪ Not reached |
-
-_Full definitions and the authoritative ledger live in [`checkpoints.md`](checkpoints.md)._
-
----
-
-## Collaborative Git Workflow (Layer 5 — Objective Proof)
-
-> *A local pass is subjective; a repository pass is objective.* `main` is **Production/Locked** —
-> we never code on it directly. Recorded in [`docs/adr/0001-collaborative-git-workflow.md`](docs/adr/0001-collaborative-git-workflow.md).
-
-```
-  feature branch            Pull Request            GitHub Actions CI            main
-  build/lab03-josephclay  ───────────────►  clean Ubuntu runner  ──(green)──►  Production/Locked
-   (atomic C2 commits)                       install • L1 • L3 • L5            (sync after merge)
-                                             (red CI blocks the merge)
+# 4. Launch the notebook
+jupyter notebook Module_03_Lab_Exercise.ipynb
 ```
 
-1. **Branch** — `git checkout -b build/lab03-josephclay` (isolated safe zone; done).
-2. **Edit & commit** — SDD + TDD + Builder Loop; one unit = one atomic commit (C2).
-3. **Pull Request** — push the branch and open a PR into `main`.
-4. **CI** — GitHub Actions re-runs the gates on a blank machine; a failure **blocks the merge**.
-5. **Sync** — after approval + merge, pull the updated `main` locally.
+Run the notebook top to bottom (Kernel → Restart & Run All) so cells execute in order.
 
-**Branch Protection** on `main` (require PR + require CI green) is the target end-state; it must be
-enabled in the GitHub repository settings. Until then, CI is *advisory* and the Pilot enforces the rule.
+## Testing & CI
 
-**Local pre-commit hook (one-time per clone).** The hook body is version-controlled in `.githooks/`,
-but Git activates it only when pointed there. After cloning, run once:
+```bash
+pytest -q tests
+```
+
+Every push and pull request runs the [CI pipeline](.github/workflows/ci.yml) on a clean runner, which
+installs dependencies, runs the environment check and tests, and executes the notebook end to end to
+confirm it reproduces without errors. A local pre-commit hook can run the same fast checks before each
+commit — enable it once per clone with:
 
 ```bash
 git config core.hooksPath .githooks
 ```
 
-Thereafter every `git commit` first runs the **L1 Setup Gate** and, once tests exist, the **L3 contract
-tests** — a non-zero result aborts the commit. This is the fast, local half of Layer 5; CI is the
-objective backstop. `--no-verify` bypasses the hook (discouraged; log any bypass in `progress.md`). See
-[`docs/adr/0003-local-precommit-hooks.md`](docs/adr/0003-local-precommit-hooks.md).
+## Development
 
-**Commit message convention (from 2026-09-11 onward).** Dual format — Conventional Commits prefix plus
-the protocol checkpoint tag:
+Development happens on feature branches and is merged into `main` via pull request after CI passes.
+Notable technical decisions are recorded as [architecture decision records](docs/adr/), and
+requirements are captured under [`specs/`](specs/).
 
-```
-<type>(<scope>): <subject>  [C<gate>, verified [<n>]]
-```
+## Deliverables
 
-e.g. `feat(cell5): load Wine into DataFrame + L4 integrity check  [C2, verified [3]]`. Existing history
-is left intact. See [`docs/adr/0004-dual-format-commit-convention.md`](docs/adr/0004-dual-format-commit-convention.md).
+| # | Deliverable | Format |
+| --- | --- | --- |
+| 1 | Executed notebook with all outputs | PDF |
+| 2 | Reflective journal | PDF (1–2 pages) |
+| 3 | Contribution journal | PDF (1–2 pages) |
 
----
+## License
 
-## Repository Layout
-
-```
-.
-├── .github/workflows/ci.yml   # L5: clean Ubuntu runner → install → L1 → L3 → L5 (notebook execute)
-├── .githooks/pre-commit   # L5 (local): runs L1 setup gate + L3 tests before every commit — see ADR 0003
-├── .venv/                 # L0: isolated environment (Python 3.14.6)
-├── docs/adr/
-│   ├── 0001-collaborative-git-workflow.md
-│   ├── 0002-python-version-strategy.md
-│   ├── 0003-local-precommit-hooks.md
-│   └── 0004-dual-format-commit-convention.md
-├── specs/
-│   ├── Product_Spec.md    # Why/What (precedence: HIGH)
-│   └── Tech_Spec.md       # How (precedence: LOW)
-├── src/                   # implementation logic
-├── tests/                 # L3: contract tests
-├── Module_03_Lab_Exercise.ipynb   # the Subject (payload)
-├── progress.md            # living state: snapshot & logs
-├── checkpoints.md         # gate reference & resume protocol
-└── README.md              # this living, badged overview
-```
-
----
-
-## Core Mandates
-
-- Never batch. **Never proceed on assumed consent.**
-- The Agent is forbidden from self-verifying code — **only the Pilot runs cells.**
-- TDD ordering (write the failing assertion first) is non-negotiable.
-- Every non-obvious technical decision gets a numbered ADR in `docs/adr/`.
-
-<!-- LAST-UPDATED: 2026-09-11 04:16 CT — Specs + Step 0 written; Layer 1 Setup Gate PASS; C0 package READY (awaiting Pilot sign-off). -->
+Coursework for ITAI 1371 (Module 3). Provided for educational purposes.
