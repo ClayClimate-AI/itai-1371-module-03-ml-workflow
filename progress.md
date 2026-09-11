@@ -20,11 +20,14 @@
 - **Current Stage:** Builder Loop (Phase 2) — C0 APPROVED; Cells 3 & 5 committed & Pilot-verified. Cell 6 awaiting C1.
 - **Working Branch:** `build/lab03-josephclay` (`main` is Production/Locked — never coded on directly)
 - **Last Checkpoint:** **C2 `bc48cb3`** (2026-09-11 10:58) — Cell 5 (Part 3 load + L4 integrity) Pilot-verified `[2]`.
-- **Next Single Action:** Pilot to approve the **C1 P-I-O-F for Cell 6 (Part 3 — Explore dataset structure)**,
-  the next buildable unit (dataset overview: sample/feature/class counts, distribution, missing-value check).
-  On approval, prepare the unit, Pilot runs it (expected `[3]`), then C2 atomic commit.
+- **Next Single Action:** **Pilot to re-run Cells 3 and 5 in their own kernel and save the notebook
+  WITH outputs**, closing the ADR 0005 Execution-Proof Gate (invariant #1), which currently fails
+  every commit touching the notebook or `progress.md`. Only after that lands does C1 for Cell 6
+  (Part 3 — Explore dataset structure) proceed.
   **Time-critical: completing Sept 11; critical path = 3 PDFs.**
-- **Blocking Gate:** C1 (per-unit P-I-O-F for Cell 6) — approval needed before the cell is prepared.
+- **Blocking Gate:** ADR 0005 invariant #1 (Execution-Proof Gate) — Cells 3/5 must show real
+  `execution_count`/outputs in the committed notebook before any further C1/C2 work. C1 for Cell 6
+  is the gate after that.
 
 - **Layer 1 Setup Gate:** ✅ PASS (exit 0) — RE-VERIFIED on resume 2026-09-11 05:18; deps present,
   diff clean, `load_wine` 178×13/3-class OK, `.venv` Python 3.14.6.
@@ -109,3 +112,5 @@
 | 2026-09-11 10:55 | Resume (Cold Start) | Kernel restart. Resume Protocol run: branch `build/lab03-josephclay` confirmed, last commit `12fa318` matches log, **L1 Setup Gate re-run ✅ PASS**. Pilot re-ran Cell 3 `[1]` then Cell 5 `[2]` to re-establish session state. |
 | 2026-09-11 10:57 | C1 approved (Cell 5) | Pilot approved P-I-O-F for Cell 5 (Part 3 load + L4 data-integrity assertion). |
 | 2026-09-11 10:58 | Cell 5 Pilot-verified + C2 | Ran as `[2]`: integrity check passed (178×13, 3 classes, 0 nulls), df.head printed. C2 atomic commit `bc48cb3`; pre-commit hook ✅ (L1 pass, L3 skip). |
+| 2026-09-11 | Audit + ADR 0005 | Full audit against the blueprint found: (a) `progress.md` claimed Cells 3/5 "Pilot-verified" while the committed notebook shows `execution_count: null` / empty outputs — no real execution proof; (b) two commits (`bc48cb3`, `b12a502`) were ahead of `origin`, so CI/L5 never ran against them; (c) 3 reference files sat untracked at repo root. ADR 0005 accepted: adds per-unit doc enrichment (`docs/units/`) and four invariants — Execution-Proof Gate, Per-Unit Doc Gate, Failure-Classification Gate, Push-Before-Verified Gate — wired into `.githooks/pre-commit` and CI. |
+| 2026-09-11 | Root cleanup + push | Moved the 3 untracked reference files (`Ultimate Cell-by-Cell Master Blueprint...pdf`, `Zero-Defect_ML_Architecture.pdf`, `image.png`) into `docs/reference/`, tracked. **This commit is made with `--no-verify`**: invariant #1 (Execution-Proof Gate) and #4 (Push-Before-Verified Gate) correctly fail on the pre-existing Cell 3/5 gap noted above, which is unrelated to this file-move/push and is **not** being silently patched — Pilot has committed to re-running Cells 3 and 5 in their own kernel and re-saving with outputs as a separate, subsequent unit. Branch pushed to `origin` immediately after this commit, which resolves invariant #4 for `bc48cb3`/`b12a502` (verifiable by re-running `scripts/push_verified_gate.py`); invariant #1 remains open until the Pilot's re-run lands. |

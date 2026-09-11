@@ -39,6 +39,17 @@
   `docs/adr/0003-local-precommit-hooks.md`. Commit messages follow the dual format
   (`<type>(<scope>): <subject>  [C<gate>, verified [<n>]]`) per `docs/adr/0004-dual-format-commit-convention.md`.
 
+### ADR 0005 Invariants (enforced in the hook, and in CI except #4)
+
+| # | Invariant | Script | Catches |
+| - | --- | --- | --- |
+| 1 | Execution-Proof Gate | `scripts/execution_proof_gate.py` | A cell logged "Pilot-verified" in `progress.md` whose committed notebook shows `execution_count: null` / empty outputs. |
+| 2 | Per-Unit Documentation Gate | `scripts/unit_doc_lint.py` | A `docs/units/*.md` record missing one of the 8 required sections (see ADR 0005). |
+| 3 | Failure-Classification Gate | `scripts/failure_log_lint.py` | A Failure & Amendment Logs entry that doesn't open with `**Code Failure**` / `**Spec Failure**`. |
+| 4 | Push-Before-Verified Gate | `scripts/push_verified_gate.py` | `progress.md` marking a commit Pilot-verified before it exists on `origin/<branch>`. Local-only — not run in CI. |
+
+See `docs/adr/0005-per-unit-documentation-enrichment.md` for full rationale.
+
 ---
 
 ## Core Mandates (non-negotiable)

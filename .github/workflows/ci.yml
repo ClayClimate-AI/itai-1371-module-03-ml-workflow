@@ -48,6 +48,12 @@ jobs:
             echo "::warning::No tests present yet — L3 gate skipped (pre-C0)."
           fi
 
+      - name: ADR 0005 invariants — execution proof, per-unit docs, failure classification
+        run: |
+          python scripts/execution_proof_gate.py
+          python scripts/unit_doc_lint.py
+          python scripts/failure_log_lint.py
+
       - name: L5 — Notebook execution (headless reproducibility proof)
         run: |
           if [ -f Module_03_Lab_Exercise.ipynb ]; then
