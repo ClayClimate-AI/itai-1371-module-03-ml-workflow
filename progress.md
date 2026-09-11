@@ -17,13 +17,14 @@
 
 ## Snapshot
 
-- **Current Stage:** Builder Loop (Phase 2) — C0 APPROVED; first unit awaiting C1 P-I-O-F sign-off.
+- **Current Stage:** Builder Loop (Phase 2) — C0 APPROVED; Cells 3 & 5 committed & Pilot-verified. Cell 6 awaiting C1.
 - **Working Branch:** `build/lab03-josephclay` (`main` is Production/Locked — never coded on directly)
-- **Last Checkpoint:** **C0 APPROVED** (2026-09-11 05:07, "Commence") — commit `e5b1a4d` captured setup.
-- **Next Single Action:** Pilot to approve the **C1 P-I-O-F for Cell 3 (Part 2 — imports)**, the first
-  buildable unit. On approval, prepare the unit (idempotent import cell + L4 environment assertion),
-  Pilot runs it, then C2 atomic commit. **Time-critical: completing Sept 11; critical path = 3 PDFs.**
-- **Blocking Gate:** C1 (per-unit P-I-O-F for Cell 3) — approval needed before the cell is prepared.
+- **Last Checkpoint:** **C2 `bc48cb3`** (2026-09-11 10:58) — Cell 5 (Part 3 load + L4 integrity) Pilot-verified `[2]`.
+- **Next Single Action:** Pilot to approve the **C1 P-I-O-F for Cell 6 (Part 3 — Explore dataset structure)**,
+  the next buildable unit (dataset overview: sample/feature/class counts, distribution, missing-value check).
+  On approval, prepare the unit, Pilot runs it (expected `[3]`), then C2 atomic commit.
+  **Time-critical: completing Sept 11; critical path = 3 PDFs.**
+- **Blocking Gate:** C1 (per-unit P-I-O-F for Cell 6) — approval needed before the cell is prepared.
 
 - **Layer 1 Setup Gate:** ✅ PASS (exit 0) — RE-VERIFIED on resume 2026-09-11 05:18; deps present,
   diff clean, `load_wine` 178×13/3-class OK, `.venv` Python 3.14.6.
@@ -67,6 +68,7 @@
 | L1 `scripts/setup_gate.py` | (uncommitted) | Created — **ran: ✅ PASS (exit 0)** |
 | ADR 0002 (Python version strategy) | `e5b1a4d` | Accepted |
 | Cell 3 (Part 2 — imports + L4 env assertion) | `31eac15` | **Committed (C2) — Pilot-verified ✅ ran as `[2]`** (L4 check + import success printed) |
+| Cell 5 (Part 3 — load + L4 data-integrity assertion) | `bc48cb3` | **Committed (C2) — Pilot-verified ✅ ran as `[2]`** (integrity check passed 178×13/3/0-nulls; df.head printed; follows Cell 3 `[1]`, no gaps) |
 | ADR 0003 (local pre-commit hooks) | (C2 pending) | Accepted |
 | ADR 0004 (dual-format commit convention) | (C2 pending) | Accepted |
 | L5 local hook `.githooks/pre-commit` + `core.hooksPath` | (C2 pending) | Created — **verified both paths**: clean=exit 0 (L1 pass, L3 skip), known-bad test=exit 1 (aborts) |
@@ -104,3 +106,6 @@
 | 2026-09-11 05:27 | C3 sequencing catch | Cell 5 run first (counter `[1]`) → `NameError: load_wine` (imports not yet run). No code defect; resolved by running top-to-bottom. No ADR (obvious operator sequencing). |
 | 2026-09-11 05:29 | Cell 3 Pilot-verified | Ran as `[2]`: L4 env check + import-success lines printed. C2 atomic commit made (`31eac15`). |
 | 2026-09-11 05:40 | Process change: hooks + commit convention | ADR 0003 (local pre-commit hooks) + ADR 0004 (dual-format commits) accepted. `.githooks/pre-commit` added (L1+L3, skips L5), `core.hooksPath=.githooks`. Hook verified both directions (clean exit 0 / known-bad exit 1). README + checkpoints.md updated. Dual-format applies from next commit. |
+| 2026-09-11 10:55 | Resume (Cold Start) | Kernel restart. Resume Protocol run: branch `build/lab03-josephclay` confirmed, last commit `12fa318` matches log, **L1 Setup Gate re-run ✅ PASS**. Pilot re-ran Cell 3 `[1]` then Cell 5 `[2]` to re-establish session state. |
+| 2026-09-11 10:57 | C1 approved (Cell 5) | Pilot approved P-I-O-F for Cell 5 (Part 3 load + L4 data-integrity assertion). |
+| 2026-09-11 10:58 | Cell 5 Pilot-verified + C2 | Ran as `[2]`: integrity check passed (178×13, 3 classes, 0 nulls), df.head printed. C2 atomic commit `bc48cb3`; pre-commit hook ✅ (L1 pass, L3 skip). |
