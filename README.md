@@ -13,29 +13,15 @@
   <img alt="Subject" src="https://img.shields.io/badge/Subject-Wine%20Classification-8E44AD">
   <img alt="Points" src="https://img.shields.io/badge/Points-100-success">
   <img alt="Due" src="https://img.shields.io/badge/Due-Thu%2011%3A59pm-important">
+  <img alt="Setup Gate" src="https://img.shields.io/badge/Setup%20Gate-PASS-brightgreen">
+  <img alt="Python" src="https://img.shields.io/badge/Python-3.14.6-3776AB?logo=python&logoColor=white">
 </p>
 
-<p>
-  <img alt="Protocol" src="https://img.shields.io/badge/Protocol-Cell--by--Cell%20Master%20Blueprint-2C3E50">
-  <img alt="Architecture" src="https://img.shields.io/badge/Architecture-Zero--Defect-2C3E50">
-  <img alt="Methodology" src="https://img.shields.io/badge/Methodology-Spec--Driven%20Gates-2C3E50">
-</p>
-
-<p>
-  <img alt="Stage" src="https://img.shields.io/badge/Stage-Pre--Flight%20Setup-yellow">
-  <img alt="Checkpoint" src="https://img.shields.io/badge/Checkpoint-C0%20READY%20(awaiting%20sign--off)-orange">
-  <img alt="Progress" src="https://img.shields.io/badge/setup-6%2F7%20tasks%20(Setup%20Gate%20PASS)-brightgreen">
-  <img alt="Python" src="https://img.shields.io/badge/.venv-Python%203.14.6-3776AB?logo=python&logoColor=white">
-  <img alt="Cells" src="https://img.shields.io/badge/Notebook-25%20cells%20(12%20code%20%2F%2013%20md)-informational">
-</p>
-
-<p>
-  <img alt="Branch" src="https://img.shields.io/badge/branch-build%2Flab03--josephclay-6f42c1?logo=git&logoColor=white">
-  <img alt="Main" src="https://img.shields.io/badge/main-Production%2FLocked-critical">
-  <img alt="Workflow" src="https://img.shields.io/badge/workflow-PR%20%E2%86%92%20CI%20%E2%86%92%20merge-0A66C2">
-  <img alt="CI" src="https://img.shields.io/badge/CI-GitHub%20Actions%20(advisory)-yellow?logo=githubactions&logoColor=white">
-  <img alt="ADR" src="https://img.shields.io/badge/ADR-0001%E2%80%930004%20accepted-2C3E50">
-</p>
+**Build status.** The notebook (25 cells: 12 code / 13 markdown) is executed under a spec-driven,
+gate-based protocol — the *Cell-by-Cell Master Blueprint* reinforced by the *Zero-Defect* architecture,
+with a decision trail in ADRs 0001–0004. Work happens on `build/lab03-josephclay` (never on `main`,
+which is Production/Locked) and integrates via PR → CI → merge. Currently past the C0 contract gate:
+Cell 3 (imports) is verified and committed, and the local pre-commit gate plus CI are active.
 
 > **This README is a living document.** It updates incrementally as the build advances, in lockstep
 > with [`progress.md`](progress.md) and [`checkpoints.md`](checkpoints.md). Together these three files
