@@ -82,7 +82,12 @@
 > `- [Failure Symptom] | [ADR Ref] | [Resolution]`
 > `- [Contract Drift] | [C0 Amendment Date]`
 
-- (none yet)
+- **Contract Drift** | C0 Amendment 2026-09-11 | Pilot requested a Learning-Curve overfitting check
+  (`sklearn.model_selection.learning_curve`, plotted train-vs-validation gap) for both trained
+  models — a new cell beyond the original 25, so an explicit Scope/DoD amendment, not a silent
+  addition. Confirmed no new model/dataset/hyperparameter search introduced. See
+  `docs/STEP0_Initial_Contract.md` (DoD now 27 cells + item 5; Scope updated). No prior model
+  exists yet to retroactively check — this applies once Steps 3–5 (Cells 12–14) are built.
 
 ---
 

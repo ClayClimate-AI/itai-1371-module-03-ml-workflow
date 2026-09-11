@@ -57,7 +57,7 @@ implementation found:
    | - | --- | --- | --- |
    | 1 | **Execution-Proof Gate** — a notebook cell referenced as "Pilot-verified" in `progress.md`'s Unit Log must have a non-null `execution_count` and non-empty `outputs` in the committed notebook. | `scripts/execution_proof_gate.py` | L4 |
    | 2 | **Per-Unit Documentation Gate** — every `docs/units/*.md` record must contain all ten required sections, none empty. | `scripts/unit_doc_lint.py` | L2 |
-   | 3 | **Failure-Classification Gate** — every entry under `progress.md`'s Failure & Amendment Logs must lead with `**Code Failure**` or `**Spec Failure**`. | `scripts/failure_log_lint.py` | C3 |
+   | 3 | **Failure-Classification Gate** — every entry under `progress.md`'s Failure & Amendment Logs must lead with `**Code Failure**`, `**Spec Failure**`, or `**Contract Drift**` (amended 2026-09-11: the original version only accepted the first two, which would have wrongly rejected a legitimate Contract Drift entry). | `scripts/failure_log_lint.py` | C3 |
    | 4 | **Push-Before-Verified Gate** — any commit hash `progress.md` marks Pilot-verified/Committed(C2) must be an ancestor of `origin/<branch>`. | `scripts/push_verified_gate.py` | L5 |
 
    Invariants 1–3 also run in CI (`.github/workflows/ci.yml`) as an objective backstop. Invariant 4

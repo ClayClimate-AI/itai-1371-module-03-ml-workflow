@@ -1,11 +1,17 @@
 #!/usr/bin/env python3
-"""Invariant #3 — Failure-Classification Gate (ADR 0005).
+"""Invariant #3 — Failure-Classification Gate (ADR 0005, corrected).
 
-Every entry under progress.md's '## Failure & Amendment Logs' section must open by
-classifying itself as a **Code Failure** (the plan was right, the implementation was
-wrong) or a **Spec Failure** (the implementation matched the plan, the plan was wrong)
-before any resolution or ADR reference is recorded -- per the Amendment Rule's existing
-"a missing rule is a contract failure, not a code failure" language, made explicit.
+The blueprint's own Living State format (§3.1) defines TWO valid shapes for this section,
+not one:
+    - [Failure Symptom] | [ADR Ref] | [Resolution]
+    - [Contract Drift]  | [C0 Amendment Date]
+
+Every entry must open with one of three tags: **Code Failure** or **Spec Failure** (for a
+Failure Symptom entry -- the plan was right and the implementation was wrong, or vice
+versa) or **Contract Drift** (for a scope/DoD amendment that isn't a failure at all, e.g.
+the Pilot deliberately expanding scope). An earlier version of this script only accepted
+the first two, which would have wrongly rejected a legitimate Contract Drift entry --
+found and fixed when the Learning-Curve scope amendment needed logging.
 """
 from __future__ import annotations
 
@@ -21,7 +27,7 @@ SECTION_RE = re.compile(
     re.MULTILINE | re.DOTALL,
 )
 PLACEHOLDER_RE = re.compile(r"^\(none yet\)$", re.IGNORECASE)
-TAG_RE = re.compile(r"^\*\*(Code Failure|Spec Failure)\*\*", re.IGNORECASE)
+TAG_RE = re.compile(r"^\*\*(Code Failure|Spec Failure|Contract Drift)\*\*", re.IGNORECASE)
 
 
 def main() -> int:
@@ -53,7 +59,7 @@ def main() -> int:
     if failures:
         print("FAILURE-CLASSIFICATION GATE: ❌ FAIL")
         for e in failures:
-            print(f"  - Missing leading **Code Failure**/**Spec Failure** tag: {e[:80]}")
+            print(f"  - Missing leading **Code Failure**/**Spec Failure**/**Contract Drift** tag: {e[:80]}")
         return 1
 
     print("FAILURE-CLASSIFICATION GATE: ✅ PASS")
