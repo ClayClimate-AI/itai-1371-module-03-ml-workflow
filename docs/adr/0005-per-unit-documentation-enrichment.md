@@ -40,8 +40,10 @@ implementation found:
    **Concept & Jargon**, **Visual Sanity Check**, **Journal Point**, **Simplified Takeaway**,
    **Sequence Mapping**. These are documentation, not new Pilot sign-off gates — they ride on the
    existing C1 approval. `docs/units/TEMPLATE.md` is the required skeleton for each new unit going
-   forward; Cells 3 and 5 (pre-dating this ADR) are grandfathered and not retroactively required to
-   have one.
+   forward. Cells 3 and 5 are **backfilled**, not grandfathered *(amended 2026-09-11, see second
+   Amendment below)* — Sequence Mapping and the Journal Point trail are inherently chained, so
+   starting the enrichment layer at Cell 6 would leave a hole at the beginning of the chain rather
+   than a clean start.
 3. **C3 failure entries must open with an explicit classification** — `**Code Failure**` or
    `**Spec Failure**` — before any resolution or ADR reference, per the Amendment Rule's existing
    "a missing rule is a contract failure, not a code failure" language.
@@ -73,8 +75,10 @@ implementation found:
   already-implemented controls as missing.
 
 **Negative / Risks**
-- More files to maintain per unit (`docs/units/<NN>-<slug>.md`). Mitigated by `TEMPLATE.md` and by
-  the gate only enforcing files that exist — nothing retroactive.
+- More files to maintain per unit (`docs/units/<NN>-<slug>.md`). Mitigated by `TEMPLATE.md`.
+- Backfilling Cells 3/5 means their P-I-O-F is written *after* the code, inverting the normal
+  C1-before-code order — flagged explicitly in each backfilled file rather than presented as if it
+  were written in advance.
 - Invariant 4 depends on the local remote-tracking ref being current; a stale `origin/*` (no
   `git fetch` since the last push by someone else) could pass or fail incorrectly. Mitigated by
   documenting `git fetch` as a Resume Protocol step.
@@ -95,3 +99,19 @@ dropped rather than deliberately excluded:
 Both are added as required `docs/units/*.md` sections (now ten total) and to
 `scripts/unit_doc_lint.py`'s `REQUIRED_SECTIONS`. `docs/units/TEMPLATE.md` updated accordingly.
 No other part of this ADR changes; Decision item 2 above reflects the amended field count.
+
+## Amendment 2 (2026-09-11) — Backfill instead of grandfather
+
+Pilot observed that Sequence Mapping and the Journal Point trail are cumulative: Cell 6's "Where
+we were" has nothing to point at if Cell 5 has no record, and a Journal Point trail feeding C4
+that starts at Cell 6 has a hole at the beginning rather than a clean start. Grandfathering Cells
+3 and 5 (original Decision item 2) would have started the enrichment layer in the middle of the
+sequence instead of at its actual beginning.
+
+**Revised decision:** `docs/units/0003-imports-env-check.md` and `docs/units/0005-load-explore-wine.md`
+are backfilled — written from the already-committed code and captured outputs, after the fact,
+and explicitly labeled retroactive in each file's header (since normal C1 order is P-I-O-F
+*before* code, not after). Both require Pilot review/approval before Cell 6 work begins, the same
+standing the original C1 approval would have had. No other units are backfilled beyond these two;
+this is a one-time catch-up to reach a real starting point, not a general retroactive-documentation
+policy.
