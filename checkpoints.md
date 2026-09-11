@@ -33,7 +33,11 @@
   Production/Locked; work occurs on branch `build/lab03-josephclay`; integration is PR-only; GitHub
   Actions (`.github/workflows/ci.yml`) re-runs L1/L3/L5 on a clean Ubuntu runner and a red run blocks
   the merge. Branch Protection on `main` is the target end-state (advisory until enabled). See
-  `docs/adr/0001-collaborative-git-workflow.md`.
+  `docs/adr/0001-collaborative-git-workflow.md`. A **local pre-commit hook** (`.githooks/pre-commit`,
+  activated per clone via `git config core.hooksPath .githooks`) runs the fast subset — L1 Setup Gate +
+  L3 tests — before every commit, aborting on failure; CI remains the objective backstop. See
+  `docs/adr/0003-local-precommit-hooks.md`. Commit messages follow the dual format
+  (`<type>(<scope>): <subject>  [C<gate>, verified [<n>]]`) per `docs/adr/0004-dual-format-commit-convention.md`.
 
 ---
 

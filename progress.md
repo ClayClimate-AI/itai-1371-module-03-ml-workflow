@@ -42,6 +42,7 @@
 | Git remote | github.com/ClayClimate-AI/itai-1371-module-03-ml-workflow | `origin` |
 | Working branch | `build/lab03-josephclay` | `main` = Production/Locked (PR-only) |
 | CI | `.github/workflows/ci.yml` (Python 3.12 pinned) | Advisory until Branch Protection is locked |
+| Local hook | `.githooks/pre-commit` (`core.hooksPath=.githooks`) | L5 local half: L1+L3 before each commit (ADR 0003) |
 
 ---
 
@@ -65,7 +66,10 @@
 | `requirements.txt` (declared deps) | (uncommitted) | Created |
 | L1 `scripts/setup_gate.py` | (uncommitted) | Created — **ran: ✅ PASS (exit 0)** |
 | ADR 0002 (Python version strategy) | `e5b1a4d` | Accepted |
-| Cell 3 (Part 2 — imports + L4 env assertion) | (C2 pending) | **Pilot-verified ✅ ran as `[2]`** — L4 check + import success printed; C2 commit in progress |
+| Cell 3 (Part 2 — imports + L4 env assertion) | `31eac15` | **Committed (C2) — Pilot-verified ✅ ran as `[2]`** (L4 check + import success printed) |
+| ADR 0003 (local pre-commit hooks) | (C2 pending) | Accepted |
+| ADR 0004 (dual-format commit convention) | (C2 pending) | Accepted |
+| L5 local hook `.githooks/pre-commit` + `core.hooksPath` | (C2 pending) | Created — **verified both paths**: clean=exit 0 (L1 pass, L3 skip), known-bad test=exit 1 (aborts) |
 
 ---
 
@@ -98,4 +102,5 @@
 | 2026-09-11 05:18 | Resume (Cold Start) | Resume Protocol run: branch `build/lab03-josephclay` confirmed, `e5b1a4d` matches Unit Log, **L1 Setup Gate re-run ✅ PASS**. Snapshot corrected to Builder Loop / C1-pending for Cell 3. |
 | 2026-09-11 05:20 | C1 approved (Cell 3) | Pilot approved P-I-O-F + L4 env assertion for Cell 3 (Part 2 imports). Agent prepared cell (surgical diff = cell 3 only; validated via json round-trip + nbformat.reads; atomic write after a recovered UTF-8 partial-write). |
 | 2026-09-11 05:27 | C3 sequencing catch | Cell 5 run first (counter `[1]`) → `NameError: load_wine` (imports not yet run). No code defect; resolved by running top-to-bottom. No ADR (obvious operator sequencing). |
-| 2026-09-11 05:29 | Cell 3 Pilot-verified | Ran as `[2]`: L4 env check + import-success lines printed. C2 atomic commit made. |
+| 2026-09-11 05:29 | Cell 3 Pilot-verified | Ran as `[2]`: L4 env check + import-success lines printed. C2 atomic commit made (`31eac15`). |
+| 2026-09-11 05:40 | Process change: hooks + commit convention | ADR 0003 (local pre-commit hooks) + ADR 0004 (dual-format commits) accepted. `.githooks/pre-commit` added (L1+L3, skips L5), `core.hooksPath=.githooks`. Hook verified both directions (clean exit 0 / known-bad exit 1). README + checkpoints.md updated. Dual-format applies from next commit. |

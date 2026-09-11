@@ -34,7 +34,7 @@
   <img alt="Main" src="https://img.shields.io/badge/main-Production%2FLocked-critical">
   <img alt="Workflow" src="https://img.shields.io/badge/workflow-PR%20%E2%86%92%20CI%20%E2%86%92%20merge-0A66C2">
   <img alt="CI" src="https://img.shields.io/badge/CI-GitHub%20Actions%20(advisory)-yellow?logo=githubactions&logoColor=white">
-  <img alt="ADR" src="https://img.shields.io/badge/ADR-0001%2C%200002%20accepted-2C3E50">
+  <img alt="ADR" src="https://img.shields.io/badge/ADR-0001%E2%80%930004%20accepted-2C3E50">
 </p>
 
 > **This README is a living document.** It updates incrementally as the build advances, in lockstep
@@ -96,7 +96,7 @@ The **System** (immutable process: guardrails, builder loop, human checkpoints) 
 | L2 | P-I-O-F (C1) | Execution sequence planned & approved before code |
 | L3 | Tests (TDD) | Known-bad inputs forced to fail |
 | L4 | Asserts | Live integrity checks bounding every transform |
-| L5 | CI + Hooks | Re-execution on a clean, objective machine state |
+| L5 | CI + Hooks | Re-execution on a clean, objective machine state (CI) **and** a local pre-commit gate (L1+L3) that runs before every commit — see ADR 0003 |
 
 ## Checkpoint Ledger (summary)
 
@@ -134,6 +134,28 @@ _Full definitions and the authoritative ledger live in [`checkpoints.md`](checkp
 **Branch Protection** on `main` (require PR + require CI green) is the target end-state; it must be
 enabled in the GitHub repository settings. Until then, CI is *advisory* and the Pilot enforces the rule.
 
+**Local pre-commit hook (one-time per clone).** The hook body is version-controlled in `.githooks/`,
+but Git activates it only when pointed there. After cloning, run once:
+
+```bash
+git config core.hooksPath .githooks
+```
+
+Thereafter every `git commit` first runs the **L1 Setup Gate** and, once tests exist, the **L3 contract
+tests** — a non-zero result aborts the commit. This is the fast, local half of Layer 5; CI is the
+objective backstop. `--no-verify` bypasses the hook (discouraged; log any bypass in `progress.md`). See
+[`docs/adr/0003-local-precommit-hooks.md`](docs/adr/0003-local-precommit-hooks.md).
+
+**Commit message convention (from 2026-09-11 onward).** Dual format — Conventional Commits prefix plus
+the protocol checkpoint tag:
+
+```
+<type>(<scope>): <subject>  [C<gate>, verified [<n>]]
+```
+
+e.g. `feat(cell5): load Wine into DataFrame + L4 integrity check  [C2, verified [3]]`. Existing history
+is left intact. See [`docs/adr/0004-dual-format-commit-convention.md`](docs/adr/0004-dual-format-commit-convention.md).
+
 ---
 
 ## Repository Layout
@@ -141,9 +163,13 @@ enabled in the GitHub repository settings. Until then, CI is *advisory* and the 
 ```
 .
 ├── .github/workflows/ci.yml   # L5: clean Ubuntu runner → install → L1 → L3 → L5 (notebook execute)
+├── .githooks/pre-commit   # L5 (local): runs L1 setup gate + L3 tests before every commit — see ADR 0003
 ├── .venv/                 # L0: isolated environment (Python 3.14.6)
 ├── docs/adr/
-│   └── 0001-collaborative-git-workflow.md
+│   ├── 0001-collaborative-git-workflow.md
+│   ├── 0002-python-version-strategy.md
+│   ├── 0003-local-precommit-hooks.md
+│   └── 0004-dual-format-commit-convention.md
 ├── specs/
 │   ├── Product_Spec.md    # Why/What (precedence: HIGH)
 │   └── Tech_Spec.md       # How (precedence: LOW)
