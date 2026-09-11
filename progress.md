@@ -18,16 +18,16 @@
 ## Snapshot
 
 - **Current Stage:** Builder Loop (Phase 2) — C0 APPROVED (DoD amended to 27 cells for the Learning-Curve
-  overfitting check). Cells 3, 5, 6 committed & Pilot-verified with real execution proof (`[3]`/`[4]`/`[5]`).
-  Cell 8 (Part 4 EDA — class distribution + correlation plot) is next.
+  overfitting check). Cells 3, 5, 6, 8 committed & Pilot-verified with real execution proof
+  (`[3]`/`[4]`/`[5]`/`[6]`). Cell 10 (Part 5 Step 1 — Data Preparation/feature selection) is next.
 - **Working Branch:** `build/lab03-josephclay` (`main` is Production/Locked — never coded on directly)
-- **Last Checkpoint:** **C2 (pending hash)** (2026-09-11 12:31) — Cell 6 execution proof captured
-  (178 samples, class_1:71/class_0:59/class_2:48, 0 missing values, L4 assertion passed).
-- **Next Single Action:** Pilot to approve the **C1 P-I-O-F for Cell 8 (Part 4 — EDA: class
-  distribution bar chart + feature correlation heatmap)**. On approval, prepare the unit per
-  ADR 0005 (P-I-O-F + the 6 enrichment fields in `docs/units/0008-*.md`), Pilot runs it, then C2.
+- **Last Checkpoint:** **C2 (pending hash)** (2026-09-11 12:43) — Cell 8 execution proof captured
+  (bar chart + 6×6 correlation heatmap, diagonal all `1.00`, 3 assertions passed, real image output).
+- **Next Single Action:** Pilot to approve the **C1 P-I-O-F for Cell 10 (Part 5 Step 1 — Data
+  Preparation: select feature matrix `X` and target `y`)**. On approval, prepare the unit per
+  ADR 0005 (P-I-O-F + the 6 enrichment fields in `docs/units/0010-*.md`), Pilot runs it, then C2.
   **Time-critical: completing Sept 11; critical path = 3 PDFs.**
-- **Blocking Gate:** C1 (per-unit P-I-O-F for Cell 6) — approval needed before the cell is prepared.
+- **Blocking Gate:** C1 (per-unit P-I-O-F for Cell 10) — approval needed before the cell is prepared.
 
 - **Layer 1 Setup Gate:** ✅ PASS (exit 0) — RE-VERIFIED on resume 2026-09-11 05:18; deps present,
   diff clean, `load_wine` 178×13/3-class OK, `.venv` Python 3.14.6.
@@ -76,7 +76,8 @@
 | ADR 0004 (dual-format commit convention) | (C2 pending) | Accepted |
 | L5 local hook `.githooks/pre-commit` + `core.hooksPath` | (C2 pending) | Created — **verified both paths**: clean=exit 0 (L1 pass, L3 skip), known-bad test=exit 1 (aborts) |
 | ADR 0005 (per-unit doc enrichment + 4 invariants) | `80d6b08`..`667ed10` | Accepted (2 amendments) |
-| Cell 6 (Part 3 — explore structure + L4 no-nulls assertion) | (C2 pending) | **Pilot-verified ✅ ran as `[5]`** — 178 samples (class_1:71, class_0:59, class_2:48, sums to 178), 0 missing values, assertion passed. `docs/units/0006-explore-dataset-structure.md`. |
+| Cell 6 (Part 3 — explore structure + L4 no-nulls assertion) | `00b9318` | **Pilot-verified ✅ ran as `[5]`** — 178 samples (class_1:71, class_0:59, class_2:48, sums to 178), 0 missing values, assertion passed. `docs/units/0006-explore-dataset-structure.md`. |
+| Cell 8 (Part 4 — EDA class distribution + correlation heatmap, 3 L4 assertions) | (C2 pending) | **Pilot-verified ✅ ran as `[6]`** — bar chart (71/59/48) + 6×6 correlation heatmap, diagonal all `1.00`; all 3 assertions passed; real `image/png` output captured. `docs/units/0008-eda-class-distribution-correlation.md`. |
 
 ---
 
@@ -125,3 +126,4 @@
 | 2026-09-11 11:37 | **Invariant #1 closed** | Pilot re-ran Cells 3 and 5 and saved the notebook. Committed notebook now shows Cell 3 `execution_count: 3` with outputs (L4 check + import-success lines) and Cell 5 `execution_count: 4` with outputs (integrity check passed 178×13/3/0-nulls, `df.head()` printed) — real proof, not a claim. `scripts/execution_proof_gate.py` run directly: ✅ PASS. Counters are `[3]`/`[4]`, not the originally-logged `[2]`/`[2]` — Unit Log corrected above rather than left misleading; the discrepancy reflects kernel restarts between the original (unproven) claim and this re-run, not a defect. This commit needs no `--no-verify`. |
 | 2026-09-11 | Backfill + C0 Amendment | `docs/units/0003-*.md` and `0005-*.md` backfilled (ADR 0005 Amendment 2) so the Sequence Mapping/Journal Point chain starts at the actual first units, not mid-sequence. Separately, Pilot requested the full Learning-Curve overfitting chart; logged as a Contract Drift (see Failure & Amendment Logs below), DoD amended 25→27 cells in `docs/STEP0_Initial_Contract.md`. Bug found and fixed while logging it: `scripts/failure_log_lint.py` only accepted Code/Spec Failure tags, wrongly rejecting a legitimate Contract Drift entry — corrected to accept all three. |
 | 2026-09-11 12:31 | Cell 6 C1 approved, prepared, Pilot-verified + C2 | C1 approved: dataset-overview cell + one added L4 assertion (`assert df.isnull().sum().sum() == 0`, proving the "no missing values" print rather than just stating it). Agent prepared the cell via a validated JSON round-trip (nbformat), then Pilot ran it: `[5]` — 178 samples, class_1:71/class_0:59/class_2:48 (sums to 178, Visual Sanity Check passed), 0 missing values, assertion passed. `docs/units/0006-explore-dataset-structure.md` written and lints clean. `scripts/execution_proof_gate.py` re-run after adding Cell 6 to the Unit Log: ✅ PASS. |
+| 2026-09-11 12:43 | Cell 8 C1 approved, prepared, Pilot-verified + C2 | C1 approved: first plot-producing cell in the notebook (class-distribution bar chart + 6-feature correlation heatmap) plus three added L4 assertions (class counts sum to 178; correlation matrix shape (6,6); diagonal all 1.0). Agent prepared the cell via a validated JSON round-trip, then Pilot ran it: `[6]` — bars at 71/59/48, heatmap diagonal all `1.00`, all assertions passed, real `image/png` output captured (not just text). `docs/units/0008-eda-class-distribution-correlation.md` written and lints clean. `scripts/execution_proof_gate.py` re-run after adding Cell 8 to the Unit Log: ✅ PASS. |
