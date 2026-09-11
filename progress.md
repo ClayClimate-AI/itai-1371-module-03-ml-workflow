@@ -17,17 +17,15 @@
 
 ## Snapshot
 
-- **Current Stage:** Builder Loop (Phase 2) — C0 APPROVED; Cells 3 & 5 committed & Pilot-verified. Cell 6 awaiting C1.
+- **Current Stage:** Builder Loop (Phase 2) — C0 APPROVED; Cells 3 & 5 committed & Pilot-verified with real execution proof (`[3]`/`[4]`). Cell 6 awaiting C1.
 - **Working Branch:** `build/lab03-josephclay` (`main` is Production/Locked — never coded on directly)
-- **Last Checkpoint:** **C2 `bc48cb3`** (2026-09-11 10:58) — Cell 5 (Part 3 load + L4 integrity) Pilot-verified `[2]`.
-- **Next Single Action:** **Pilot to re-run Cells 3 and 5 in their own kernel and save the notebook
-  WITH outputs**, closing the ADR 0005 Execution-Proof Gate (invariant #1), which currently fails
-  every commit touching the notebook or `progress.md`. Only after that lands does C1 for Cell 6
-  (Part 3 — Explore dataset structure) proceed.
+- **Last Checkpoint:** **C2 (pending hash)** (2026-09-11 11:37) — execution-proof re-save for Cells 3/5 committed; ADR 0005 invariant #1 now passes clean (no `--no-verify`).
+- **Next Single Action:** Pilot to approve the **C1 P-I-O-F for Cell 6 (Part 3 — Explore dataset
+  structure)**, the next buildable unit (sample/feature/class counts, distribution, missing-value
+  check). On approval, prepare the unit per ADR 0005 (P-I-O-F + the 6 enrichment fields in
+  `docs/units/0006-*.md`), Pilot runs it, then C2 atomic commit.
   **Time-critical: completing Sept 11; critical path = 3 PDFs.**
-- **Blocking Gate:** ADR 0005 invariant #1 (Execution-Proof Gate) — Cells 3/5 must show real
-  `execution_count`/outputs in the committed notebook before any further C1/C2 work. C1 for Cell 6
-  is the gate after that.
+- **Blocking Gate:** C1 (per-unit P-I-O-F for Cell 6) — approval needed before the cell is prepared.
 
 - **Layer 1 Setup Gate:** ✅ PASS (exit 0) — RE-VERIFIED on resume 2026-09-11 05:18; deps present,
   diff clean, `load_wine` 178×13/3-class OK, `.venv` Python 3.14.6.
@@ -70,8 +68,8 @@
 | `requirements.txt` (declared deps) | (uncommitted) | Created |
 | L1 `scripts/setup_gate.py` | (uncommitted) | Created — **ran: ✅ PASS (exit 0)** |
 | ADR 0002 (Python version strategy) | `e5b1a4d` | Accepted |
-| Cell 3 (Part 2 — imports + L4 env assertion) | `31eac15` | **Committed (C2) — Pilot-verified ✅ ran as `[2]`** (L4 check + import success printed) |
-| Cell 5 (Part 3 — load + L4 data-integrity assertion) | `bc48cb3` | **Committed (C2) — Pilot-verified ✅ ran as `[2]`** (integrity check passed 178×13/3/0-nulls; df.head printed; follows Cell 3 `[1]`, no gaps) |
+| Cell 3 (Part 2 — imports + L4 env assertion) | `31eac15`, exec proof re-saved | **Pilot-verified ✅ ran as `[3]`** — corrected 2026-09-11; original commit's notebook carried no execution proof (see below) |
+| Cell 5 (Part 3 — load + L4 data-integrity assertion) | `bc48cb3`, exec proof re-saved | **Pilot-verified ✅ ran as `[4]`** — corrected 2026-09-11; original commit's notebook carried no execution proof (see below) |
 | ADR 0003 (local pre-commit hooks) | (C2 pending) | Accepted |
 | ADR 0004 (dual-format commit convention) | (C2 pending) | Accepted |
 | L5 local hook `.githooks/pre-commit` + `core.hooksPath` | (C2 pending) | Created — **verified both paths**: clean=exit 0 (L1 pass, L3 skip), known-bad test=exit 1 (aborts) |
@@ -115,3 +113,4 @@
 | 2026-09-11 | Audit + ADR 0005 | Full audit against the blueprint found: (a) `progress.md` claimed Cells 3/5 "Pilot-verified" while the committed notebook shows `execution_count: null` / empty outputs — no real execution proof; (b) two commits (`bc48cb3`, `b12a502`) were ahead of `origin`, so CI/L5 never ran against them; (c) 3 reference files sat untracked at repo root. ADR 0005 accepted: adds per-unit doc enrichment (`docs/units/`) and four invariants — Execution-Proof Gate, Per-Unit Doc Gate, Failure-Classification Gate, Push-Before-Verified Gate — wired into `.githooks/pre-commit` and CI. |
 | 2026-09-11 | Root cleanup + push | Moved the 3 untracked reference files (`Ultimate Cell-by-Cell Master Blueprint...pdf`, `Zero-Defect_ML_Architecture.pdf`, `image.png`) into `docs/reference/`, tracked. **This commit is made with `--no-verify`**: invariant #1 (Execution-Proof Gate) and #4 (Push-Before-Verified Gate) correctly fail on the pre-existing Cell 3/5 gap noted above, which is unrelated to this file-move/push and is **not** being silently patched — Pilot has committed to re-running Cells 3 and 5 in their own kernel and re-saving with outputs as a separate, subsequent unit. Branch pushed to `origin` immediately after this commit, which resolves invariant #4 for `bc48cb3`/`b12a502` (verifiable by re-running `scripts/push_verified_gate.py`); invariant #1 remains open until the Pilot's re-run lands. |
 | 2026-09-11 | ADR 0005 amendment | Two sections found dropped (not deliberately excluded) from the Pilot's original checklist: **Visual Sanity Check** and **Simplified Takeaway** (Pilot's naming, replacing the source's "10th-Grade Takeaway"). Added as required `docs/units/*.md` sections (10 total), `TEMPLATE.md` and `scripts/unit_doc_lint.py` updated and smoke-tested (full record passes; a record missing one section correctly fails). **Committed with `--no-verify`** for the same still-open reason as above — invariant #1 fails on the pre-existing Cell 3/5 gap, unrelated to this amendment. |
+| 2026-09-11 11:37 | **Invariant #1 closed** | Pilot re-ran Cells 3 and 5 and saved the notebook. Committed notebook now shows Cell 3 `execution_count: 3` with outputs (L4 check + import-success lines) and Cell 5 `execution_count: 4` with outputs (integrity check passed 178×13/3/0-nulls, `df.head()` printed) — real proof, not a claim. `scripts/execution_proof_gate.py` run directly: ✅ PASS. Counters are `[3]`/`[4]`, not the originally-logged `[2]`/`[2]` — Unit Log corrected above rather than left misleading; the discrepancy reflects kernel restarts between the original (unproven) claim and this re-run, not a defect. This commit needs no `--no-verify`. |
