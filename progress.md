@@ -17,16 +17,16 @@
 
 ## Snapshot
 
-- **Current Stage:** Pre-Flight System Setup (Phase 1)
+- **Current Stage:** Builder Loop (Phase 2) — C0 APPROVED; first unit awaiting C1 P-I-O-F sign-off.
 - **Working Branch:** `build/lab03-josephclay` (`main` is Production/Locked — never coded on directly)
-- **Last Checkpoint:** — (approaching C0)
-- **Last Checkpoint:** — (**C0 risks RESOLVED — awaiting explicit build go-ahead**)
-- **Next Single Action:** On Pilot's "go": make the first C2 atomic commit of setup artifacts, then
-  begin the Builder Loop at Cell 1 (Part 2 imports) with its C1 P-I-O-F. **DEADLINE: Sept 10 (late,
-  Canvas discrepancy) — completing Sept 11; prioritize critical path to the 3 PDFs.**
-- **Blocking Gate:** C0 (Initial Contract) — explicit go-ahead needed before construction.
+- **Last Checkpoint:** **C0 APPROVED** (2026-09-11 05:07, "Commence") — commit `e5b1a4d` captured setup.
+- **Next Single Action:** Pilot to approve the **C1 P-I-O-F for Cell 3 (Part 2 — imports)**, the first
+  buildable unit. On approval, prepare the unit (idempotent import cell + L4 environment assertion),
+  Pilot runs it, then C2 atomic commit. **Time-critical: completing Sept 11; critical path = 3 PDFs.**
+- **Blocking Gate:** C1 (per-unit P-I-O-F for Cell 3) — approval needed before the cell is prepared.
 
-- **Layer 1 Setup Gate:** ✅ PASS (exit 0) — deps present, diff clean, `load_wine` 178×13/3-class OK.
+- **Layer 1 Setup Gate:** ✅ PASS (exit 0) — RE-VERIFIED on resume 2026-09-11 05:18; deps present,
+  diff clean, `load_wine` 178×13/3-class OK, `.venv` Python 3.14.6.
 
 ---
 
@@ -49,10 +49,12 @@
 
 > Format per blueprint: `[Unit Name] | [Commit Hash] | [Verification Status]`
 > One unit = one commit (C2). Updated as each notebook cell/unit is planned, built, and verified.
+>
+> **C2 commit `e5b1a4d`** (2026-09-11 05:07) captured all pre-flight setup artifacts below.
 
 | Unit Name | Commit Hash | Verification Status |
 | --- | --- | --- |
-| Bubble: directory hierarchy + `.venv` | (uncommitted) | Created — pending C0 |
+| Bubble: directory hierarchy + `.venv` | `e5b1a4d` | Committed (C0 approved) |
 | Living State: `progress.md` + `checkpoints.md` | (uncommitted) | Created — pending C0 |
 | Visual README (badged, incremental) | (uncommitted) | Created — pending C0 |
 | Working branch `build/lab03-josephclay` | n/a (branch op) | Created — active |
@@ -62,7 +64,8 @@
 | Step 0 Initial Contract `docs/STEP0_Initial_Contract.md` | (uncommitted) | Created — pending C0 sign-off |
 | `requirements.txt` (declared deps) | (uncommitted) | Created |
 | L1 `scripts/setup_gate.py` | (uncommitted) | Created — **ran: ✅ PASS (exit 0)** |
-| ADR 0002 (Python version strategy) | (uncommitted) | Accepted |
+| ADR 0002 (Python version strategy) | `e5b1a4d` | Accepted |
+| Cell 3 (Part 2 — imports + L4 env assertion) | (C2 pending) | **Pilot-verified ✅ ran as `[2]`** — L4 check + import success printed; C2 commit in progress |
 
 ---
 
@@ -91,3 +94,8 @@
 | 2026-09-11 04:16 | Step 0 contract written | `docs/STEP0_Initial_Contract.md` — project P-I-O-F + DoD + Scope |
 | 2026-09-11 04:16 | Layer 1 Setup Gate ran | ✅ PASS (exit 0): deps present, diff clean, `load_wine` 178×13/3-class OK |
 | 2026-09-11 04:52 | C0 risks resolved | ADR 0002 (Python version strategy) accepted; solo member Joseph Clay; due Sept 10→11 (Canvas discrepancy). Awaiting explicit build go-ahead. |
+| 2026-09-11 05:07 | **C0 APPROVED** | Pilot "Commence"; C2 commit `e5b1a4d` captured all pre-flight setup. Construction authorized. |
+| 2026-09-11 05:18 | Resume (Cold Start) | Resume Protocol run: branch `build/lab03-josephclay` confirmed, `e5b1a4d` matches Unit Log, **L1 Setup Gate re-run ✅ PASS**. Snapshot corrected to Builder Loop / C1-pending for Cell 3. |
+| 2026-09-11 05:20 | C1 approved (Cell 3) | Pilot approved P-I-O-F + L4 env assertion for Cell 3 (Part 2 imports). Agent prepared cell (surgical diff = cell 3 only; validated via json round-trip + nbformat.reads; atomic write after a recovered UTF-8 partial-write). |
+| 2026-09-11 05:27 | C3 sequencing catch | Cell 5 run first (counter `[1]`) → `NameError: load_wine` (imports not yet run). No code defect; resolved by running top-to-bottom. No ADR (obvious operator sequencing). |
+| 2026-09-11 05:29 | Cell 3 Pilot-verified | Ran as `[2]`: L4 env check + import-success lines printed. C2 atomic commit made. |
