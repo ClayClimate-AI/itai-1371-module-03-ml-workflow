@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-"""Invariant #2 — Per-Unit Documentation Gate (ADR 0005).
+"""Invariant #2 — Per-Unit Documentation Gate (ADR 0005, amended).
 
-Every per-unit record under docs/units/*.md must carry all eight required sections
-(the original P-I-O-F four, plus the ADR 0005 enrichment four), each with real content.
-A record missing a section, or with a header but nothing under it, fails the gate.
+Every per-unit record under docs/units/*.md must carry all ten required sections
+(the original P-I-O-F four, plus the six ADR 0005 enrichment sections), each with real
+content. A record missing a section, or with a header but nothing under it, fails the
+gate.
 
 Only checks files that exist -- nothing is retroactive. Cells committed before ADR 0005
 (Cells 3 and 5) are grandfathered per that ADR and have no docs/units/ file.
@@ -25,7 +26,9 @@ REQUIRED_SECTIONS = [
     "Flow",
     "Expected Result",
     "Concept & Jargon",
+    "Visual Sanity Check",
     "Journal Point",
+    "Simplified Takeaway",
     "Sequence Mapping",
 ]
 

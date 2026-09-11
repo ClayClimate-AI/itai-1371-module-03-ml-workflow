@@ -35,8 +35,9 @@ implementation found:
 1. **The PDF blueprint remains the sole normative contract.** Gates C0–C5, Layers L0–L5, the
    Amendment Rule, spec precedence, and the L3/L4 distinction are unchanged. Nothing here
    supersedes them.
-2. **C1 P-I-O-F records gain four required fields**, captured per-unit in `docs/units/*.md`
-   alongside the original four: **Expected Result**, **Concept & Jargon**, **Journal Point**,
+2. **C1 P-I-O-F records gain six required fields** *(amended 2026-09-11, see Amendment below)*,
+   captured per-unit in `docs/units/*.md` alongside the original four: **Expected Result**,
+   **Concept & Jargon**, **Visual Sanity Check**, **Journal Point**, **Simplified Takeaway**,
    **Sequence Mapping**. These are documentation, not new Pilot sign-off gates — they ride on the
    existing C1 approval. `docs/units/TEMPLATE.md` is the required skeleton for each new unit going
    forward; Cells 3 and 5 (pre-dating this ADR) are grandfathered and not retroactively required to
@@ -53,7 +54,7 @@ implementation found:
    | # | Invariant | Script | Layer |
    | - | --- | --- | --- |
    | 1 | **Execution-Proof Gate** — a notebook cell referenced as "Pilot-verified" in `progress.md`'s Unit Log must have a non-null `execution_count` and non-empty `outputs` in the committed notebook. | `scripts/execution_proof_gate.py` | L4 |
-   | 2 | **Per-Unit Documentation Gate** — every `docs/units/*.md` record must contain all eight required sections, none empty. | `scripts/unit_doc_lint.py` | L2 |
+   | 2 | **Per-Unit Documentation Gate** — every `docs/units/*.md` record must contain all ten required sections, none empty. | `scripts/unit_doc_lint.py` | L2 |
    | 3 | **Failure-Classification Gate** — every entry under `progress.md`'s Failure & Amendment Logs must lead with `**Code Failure**` or `**Spec Failure**`. | `scripts/failure_log_lint.py` | C3 |
    | 4 | **Push-Before-Verified Gate** — any commit hash `progress.md` marks Pilot-verified/Committed(C2) must be an ancestor of `origin/<branch>`. | `scripts/push_verified_gate.py` | L5 |
 
@@ -78,3 +79,19 @@ implementation found:
   `git fetch` since the last push by someone else) could pass or fail incorrectly. Mitigated by
   documenting `git fetch` as a Resume Protocol step.
 - Four more checks on every commit (~sub-second each, stdlib-only, no new dependencies).
+
+## Amendment (2026-09-11)
+
+A re-check against the Pilot's original pasted checklist found two more sections that had been
+dropped rather than deliberately excluded:
+
+- **Visual Sanity Check** — a specific, checkable correctness claim distinct from Expected Result
+  (e.g., "the scaler was fit only on `X_train`, never `.fit_transform()`'d on `X_test`") — the
+  thing that catches a subtle mistake a merely-plausible-looking output would not.
+- **Simplified Takeaway** (the Pilot's naming; the source checklist called this the "10th-Grade
+  Takeaway" — renamed here since "simplified" describes the content without a specific grade-level
+  claim) — a plain-language, no-jargon summary of the unit.
+
+Both are added as required `docs/units/*.md` sections (now ten total) and to
+`scripts/unit_doc_lint.py`'s `REQUIRED_SECTIONS`. `docs/units/TEMPLATE.md` updated accordingly.
+No other part of this ADR changes; Decision item 2 above reflects the amended field count.
