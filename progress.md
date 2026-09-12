@@ -115,6 +115,12 @@
   `docs/STEP0_Initial_Contract.md` (DoD now 27 cells + item 5; Scope updated). No prior model
   exists yet to retroactively check — this applies once Steps 3–5 (Cells 12–14) are built.
 
+- **Contract Drift** | C0 Amendment 2026-09-12 | Pilot chose local `nbconvert --to webpdf`
+  (Playwright/Chromium) over the originally-locked Colab path for the C5 PDF export. See
+  **ADR 0006** and `checkpoints.md` Constraint 2 (amended). CI's `--execute` step remains the
+  objective "runs clean" proof; this only changes how the final PDF is produced. Dry-run on the
+  in-progress notebook confirmed the toolchain works (768KB PDF, no errors) before any real export.
+
 ---
 
 ## Session Timeline (human-readable trail)

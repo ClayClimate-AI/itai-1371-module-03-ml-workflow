@@ -10,3 +10,6 @@ scikit-learn>=1.3
 pytest>=7.4
 jupyter>=1.0
 nbconvert>=7.0
+
+# C5 export tooling (ADR 0006: local `nbconvert --to webpdf` instead of Colab)
+playwright>=1.40

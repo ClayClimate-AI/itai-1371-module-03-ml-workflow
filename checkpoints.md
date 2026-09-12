@@ -67,9 +67,11 @@ See `docs/adr/0005-per-unit-documentation-enrichment.md` for full rationale.
    the sole executor**. Local objective proof comes from the Bubble's L1/L3 gates and CI, not from
    the Agent executing the payload notebook.
 2. **Delivery scope:** The **local Bubble** provides objective proof (L1 setup gate, L3 contract
-   tests, L5 CI notebook execution on a clean runner). **Google Colab is used ONLY for the final
-   PDF export at the C5 Export Gate** (kernel restart → run-all `[1..N]` no gaps → visual audit →
-   headless export). Colab is not part of the build/verify loop.
+   tests, L5 CI notebook execution on a clean runner). **Amended 2026-09-12 (ADR 0006):** the C5
+   PDF export uses local `jupyter nbconvert --to webpdf` (Playwright/Chromium) instead of the
+   originally-locked Colab path — rendering already-saved outputs, never re-executing. CI's
+   `nbconvert --to notebook --execute` step remains the objective "runs clean" proof; this change
+   only affects how the final PDF artifact is produced.
 
 ---
 
