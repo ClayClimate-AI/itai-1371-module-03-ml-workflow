@@ -17,17 +17,17 @@
 
 ## Snapshot
 
-- **Current Stage:** Builder Loop (Phase 2) — C0 APPROVED (DoD amended to 27 cells for the Learning-Curve
-  overfitting check). Cells 3, 5, 6, 8, 10, 11, 12, 13, 14 committed & Pilot-verified with real
-  execution proof (`[3]`/`[4]`/`[5]`/`[6]`/`[7]`/`[8]`/`[9]`/`[10]`/`[11]`). The new **Learning-Curve
-  cell** (Amendment, after Cell 14) is next — the last cell before the 27-cell DoD is complete.
+- **Current Stage:** Builder Loop (Phase 2) — C0 APPROVED. **DoD item 5 (Learning-Curve
+  overfitting check, 27 cells) is now COMPLETE** — both models show healthy generalization
+  (gaps 0.035 / 0.038). Cells 3, 5, 6, 8, 10, 11, 12, 13, 14, 16 committed & Pilot-verified with
+  real execution proof (`[3]`–`[12]`, no gaps). Cell 18 (old Cell 16, Part 6 — Data Types in ML)
+  is next; everything from here on is the notebook's remaining conceptual/assessment sections.
 - **Working Branch:** `build/lab03-josephclay` (`main` is Production/Locked — never coded on directly)
-- **Last Checkpoint:** **C2 (pending hash)** (2026-09-11 22:21) — Cell 14 execution proof captured
-  (confusion matrix diagonal 33/36=0.917, cross-checked against Cell 13, 3 assertions passed).
-- **Next Single Action:** Pilot to approve the **C1 P-I-O-F for the new Learning-Curve cell**
-  (`sklearn.model_selection.learning_curve` for both models, plotted train-vs-validation gap — the
-  DoD item 5 amendment). On approval, prepare the unit per ADR 0005 (P-I-O-F + the 6 enrichment
-  fields in `docs/units/0015-*.md`), Pilot runs it, then C2.
+- **Last Checkpoint:** **C2 (pending hash)** (2026-09-11 22:28) — Learning-Curve cell execution
+  proof captured (LogReg gap 0.035, Tree gap 0.038, both ✅, 2 assertions passed).
+- **Next Single Action:** Pilot to approve the **C1 P-I-O-F for Cell 18 (Part 6 — Understanding
+  Different Data Types in ML)**. On approval, prepare the unit per ADR 0005 (P-I-O-F + the 6
+  enrichment fields in `docs/units/0018-*.md`), Pilot runs it, then C2.
   **Time-critical: completing Sept 11; critical path = 3 PDFs.**
 - **Blocking Gate:** C1 (per-unit P-I-O-F for Cell 10) — approval needed before the cell is prepared.
 
@@ -84,7 +84,8 @@
 | Cell 11 (Part 5 Step 2 — Data Splitting: stratified 80/20, 3 L4 assertions) | `2595fc8` | **Pilot-verified ✅ ran as `[8]`** — 142/36 split; train [47,57,38] + test [12,14,10] = original [59,71,48]; all 3 assertions passed. `docs/units/0011-train-test-split.md`. |
 | Cell 12 (Part 5 Step 3 — Model Training: scale train-only + train 2 models, 3 L4 assertions) | `d7407cf` | **Pilot-verified ✅ ran as `[9]`** — both models trained (Logistic Regression, Decision Tree); scaling centered + finite; all 3 assertions passed. `docs/units/0012-scale-and-train-models.md`. |
 | Cell 13 (Part 5 Step 4 — Model Evaluation + train/test gap check, 3 L4 assertions) | `2bc9319` | **Pilot-verified ✅ ran as `[10]`** — LogReg: Test 0.917/Train 0.866 (gap -0.050); Tree: Test 0.833/Train 0.880 (gap 0.047); both ✅ small; best model LogReg; all 3 assertions passed. `docs/units/0013-evaluate-models.md`. |
-| Cell 14 (Part 5 Step 5 — Model Interpretation: confusion matrix, 3 L4 assertions incl. cross-check) | (C2 pending) | **Pilot-verified ✅ ran as `[11]`** — cm diagonal 12+14+7=33/36=0.917, matches Cell 13 exactly (cross-check assertion passed); class_2's 3 misses to class_1 confirm its 0.70 recall. `docs/units/0014-confusion-matrix.md`. |
+| Cell 14 (Part 5 Step 5 — Model Interpretation: confusion matrix, 3 L4 assertions incl. cross-check) | `77f322d` | **Pilot-verified ✅ ran as `[11]`** — cm diagonal 12+14+7=33/36=0.917, matches Cell 13 exactly (cross-check assertion passed); class_2's 3 misses to class_1 confirm its 0.70 recall. `docs/units/0014-confusion-matrix.md`. |
+| Cell 16 (Step 6, Amendment — Learning Curves overfitting check, new cell, 2 L4 assertions) | (C2 pending) | **Pilot-verified ✅ ran as `[12]`** — LogReg gap 0.035, Tree gap 0.038, both ✅ healthy generalization; **DoD item 5 (27 cells) now complete**. `docs/units/0016-learning-curves-overfitting-check.md`. |
 
 ---
 
@@ -139,3 +140,4 @@
 | 2026-09-11 22:08 | Cell 12 C1 approved, prepared, Pilot-verified + C2 | C1 approved: scale features (fit on train only) and train Logistic Regression + Decision Tree — first cell to actually produce a trained model. Three added L4 assertions: `X_train_scaled` centered (`abs(mean) < 0.01`); both scaled arrays finite; both models actually trained (`len(trained_models)==len(models)==2`). Agent prepared the cell via a validated JSON round-trip, then Pilot ran it: `[9]` — both models trained, all assertions passed. `docs/units/0012-scale-and-train-models.md` written and lints clean. `scripts/execution_proof_gate.py` re-run after adding Cell 12 to the Unit Log: ✅ PASS. |
 | 2026-09-11 22:15 | Cell 13 C1 approved, prepared, Pilot-verified + C2 | C1 approved: evaluate both models (accuracy, classification report) plus a new train/test accuracy gap check (`⚠️` if `gap > 0.10`, else `✅`) — a lightweight overfitting signal ahead of the full Learning-Curve cell. Three added L4 assertions: prediction-length match, accuracy range `[0,1]` for both train and test, and the three per-model dicts staying in sync. Pilot ran it: `[10]` — Logistic Regression Test 0.917/Train 0.866 (gap **-0.050**, test scored higher — not a bug, just a 36-sample test set landing on an easier subset by chance); Decision Tree Test 0.833/Train 0.880 (gap 0.047); both flagged `✅`; best model Logistic Regression. `docs/units/0013-evaluate-models.md` written, then corrected post-run (Visual Sanity Check and Journal Point both updated to reflect the negative-gap result honestly rather than the assumed train-≥-test pattern) — lints clean. `scripts/execution_proof_gate.py` re-run after adding Cell 13 to the Unit Log: ✅ PASS. |
 | 2026-09-11 22:21 | Cell 14 C1 approved, prepared, Pilot-verified + C2 | C1 approved: confusion matrix heatmap for the best model. Three added L4 assertions, the third a cross-cell consistency check: `cm.shape==(3,3)`; `cm.sum()==len(y_test)`; `np.trace(cm)/cm.sum()` isclose to `results[best_model]` — independently recomputes accuracy from the confusion matrix and proves it matches Cell 13's `accuracy_score` exactly. Pilot ran it: `[11]` — diagonal 12+14+7=33/36=0.917 (matches Cell 13 exactly, assertion passed); class_2's 3 misclassifications into class_1 visibly confirm its 0.70 recall from Cell 13's report. `docs/units/0014-confusion-matrix.md` written and lints clean. `scripts/execution_proof_gate.py` re-run after adding Cell 14 to the Unit Log: ✅ PASS. |
+| 2026-09-11 22:28 | Learning-Curve cell (C0 Amendment) — built, 2 bugs caught pre-run, Pilot-verified + C2 | First genuinely NEW cell (not editing an existing template cell): inserted markdown header + code cell at index 15/16, after Cell 14, shifting every cell from old Cell 15 ("Part 6...") onward by +2 (25→27 cells, completing the DoD 5 amendment). Two bugs found and fixed by reading the generated code before handing it to the Pilot (Agent cannot execute the payload notebook to test it): (1) a Unicode surrogate-pair literal crashed the initial write — fixed by using named-escape/direct Unicode characters instead; (2) `train_sizes` starting at 10% risked a `ValueError` from `StratifiedKFold(cv=5)` starving the smallest class in a ~14-sample subset — raised the floor to 30%; (3) a doubled `{{flag}}` in an f-string would have printed the literal text `{flag}` instead of the value — caught by re-reading the code, fixed to `{flag}`. Two L4 assertions added: learning-curve output shapes align; both mean-accuracy arrays stay in `[0,1]`. Pilot ran it: `[12]` — Logistic Regression gap 0.035, Decision Tree gap 0.038, both `✅ small gap -- good generalization`; both models' training/validation lines converge as training size grows from 33→113 samples — the "wow chart" showing neither model overfit. `docs/units/0016-learning-curves-overfitting-check.md` written, Journal Point updated post-run with the real numbers, lints clean. `scripts/execution_proof_gate.py` re-run after adding Cell 16: ✅ PASS. **DoD item 5 (27 cells, Learning-Curve check) is now complete.** |
