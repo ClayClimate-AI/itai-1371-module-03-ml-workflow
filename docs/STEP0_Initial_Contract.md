@@ -53,7 +53,10 @@ an L3 test where applicable, and a C2 atomic commit — before the Pilot runs th
    training/validation accuracy, via `sklearn.model_selection.learning_curve`) is rendered and the
    train/validation gap is stated explicitly — proof of generalization vs. overfitting, not just a
    single test-set number.
-6. Assessment answers 5/5; reflection markdown completed by Pilot.
+6. Assessment answers 5/5; reflection markdown completed by Pilot, **including a real, non-blank
+   answer to "Questions for further exploration"** (Cell 25) — Attempt 1's grading feedback
+   (Sep 10, Viswanatha Rao, 100/100 with a -2/+2 offset) specifically docked points for leaving
+   this exact field blank. Do not resubmit with `[Your questions]` still unfilled.
 7. L4 validators emit `PASS` (vocal success) and are proven to catch known-bad input (L3).
 8. CI green on the PR (clean-runner objective proof) before merge to `main`.
 9. Three PDFs exported per C5 gate, named exactly per Product Spec §3.
