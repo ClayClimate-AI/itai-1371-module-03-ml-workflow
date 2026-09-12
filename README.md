@@ -5,14 +5,17 @@
   <img alt="Module" src="https://img.shields.io/badge/Module-03-1F6FEB">
   <img alt="Task" src="https://img.shields.io/badge/Task-Wine%20Classification-8E44AD">
   <img alt="Python" src="https://img.shields.io/badge/Python-3.12%20%7C%203.14-3776AB?logo=python&logoColor=white">
-  <img alt="CI" src="https://img.shields.io/badge/CI-GitHub%20Actions-2088FF?logo=githubactions&logoColor=white">
+  <a href="https://github.com/ClayClimate-AI/itai-1371-module-03-ml-workflow/actions/workflows/ci.yml">
+    <img alt="CI" src="https://github.com/ClayClimate-AI/itai-1371-module-03-ml-workflow/actions/workflows/ci.yml/badge.svg?branch=main">
+  </a>
   <img alt="License" src="https://img.shields.io/badge/License-Educational-lightgrey">
 </p>
 
 An end-to-end machine-learning workflow on the classic **Wine** dataset: load and explore the data,
 run exploratory analysis, train and compare classifiers, and evaluate the results. The work is
-organized as a single Jupyter notebook backed by a reproducible environment, contract tests, and
-continuous integration.
+organized as a single Jupyter notebook backed by a reproducible environment and continuous
+integration that re-executes the notebook on a clean runner. (No `tests/` contract tests exist yet
+— see [Testing & CI](#testing--ci) below.)
 
 ## Overview
 
@@ -44,13 +47,21 @@ This also settles which model actually explains the accuracy gap between them: t
 scored lower not because it overfit (its own gap is just as healthy as Logistic Regression's), but
 because a tree capped at `max_depth=3` can only draw a small number of boxy decision boundaries —
 a worse geometric fit for how the three wine classes separate than the smooth line Logistic
-Regression draws.
+Regression draws. (`max_depth=3` is inherited from the original assignment template, not tuned for
+this comparison — worth stating plainly so the result doesn't read as cherry-picked.)
 
 ## Dataset
 
 The [Wine recognition dataset](https://scikit-learn.org/stable/datasets/toy_dataset.html#wine-recognition-dataset)
 ships with scikit-learn (`sklearn.datasets.load_wine`). It contains 178 samples described by 13
 continuous chemical-analysis features, labeled across 3 classes. No external download is required.
+
+**Scope note:** this is a low-dimensional benchmark dataset used here for pipeline and methodology
+validation, not a large-scale evaluation corpus. At n=178 with a single stratified 80/20 split, the
+learning-curve check (see [Results](#results)) is meaningful evidence against overfitting, but it
+is not a substitute for k-fold cross-validation or a held-out set from a second, independent
+sample. The value of this project is the workflow and the generalization argument it makes, not
+the absolute accuracy number.
 
 ## Project structure
 
@@ -60,8 +71,8 @@ continuous chemical-analysis features, labeled across 3 classes. No external dow
 ├── assets/                        # exported chart images (e.g. learning curves)
 ├── requirements.txt               # Python dependencies
 ├── scripts/setup_gate.py          # environment / dependency check
-├── src/                           # supporting implementation code
-├── tests/                         # contract tests
+├── src/                           # reserved for extracted implementation code (unused so far)
+├── tests/                         # reserved for contract tests (unused so far — see Testing & CI)
 ├── specs/                         # product & technical specifications
 ├── docs/adr/                      # architecture decision records
 └── .github/workflows/ci.yml       # CI pipeline
@@ -90,13 +101,14 @@ Run the notebook top to bottom (Kernel → Restart & Run All) so cells execute i
 
 ## Testing & CI
 
-```bash
-pytest -q tests
-```
+No unit/contract tests exist in `tests/` yet — this project's correctness checks live as inline
+assertions inside the notebook itself (shape, alignment, range, and cross-cell consistency checks
+at each step), not as a separate pytest suite. `pytest -q tests` is wired into CI and the
+pre-commit hook and will run cleanly (0 tests collected) if you add files there later.
 
 Every push and pull request runs the [CI pipeline](.github/workflows/ci.yml) on a clean runner, which
-installs dependencies, runs the environment check and tests, and executes the notebook end to end to
-confirm it reproduces without errors. A local pre-commit hook can run the same fast checks before each
+installs dependencies, runs the environment check, and executes the notebook end to end to confirm
+it reproduces without errors. A local pre-commit hook can run the same fast checks before each
 commit — enable it once per clone with:
 
 ```bash
