@@ -17,18 +17,22 @@
 
 ## Snapshot
 
-- **Current Stage:** Builder Loop (Phase 2) — C0 APPROVED. DoD item 5 (Learning-Curve check,
-  27 cells) is complete. Cells 3, 5, 6, 8, 10, 11, 12, 13, 14, 16, 18, 20, 22 committed &
-  Pilot-verified with real execution proof (`[3]`–`[15]`, no gaps). Only markdown-only cells (23,
-  24, 25, 26) remain — Cell 25 is the flagged one (Attempt-1 reflection reminder below).
+- **Current Stage:** **PAUSED (intentional break) at a clean stopping point.** Builder Loop
+  (Phase 2) — C0 APPROVED. DoD item 5 (Learning-Curve check, 27 cells) is complete. Cells 3, 5, 6,
+  8, 10, 11, 12, 13, 14, 16, 18, 20, 22 committed & Pilot-verified with real execution proof
+  (`[3]`–`[15]`, no gaps) — **all 13 code cells in the notebook are done.** Only 4 markdown-only
+  cells remain (23, 24, 25, 26); none are blocked, nothing is mid-edit.
 - **Working Branch:** `build/lab03-josephclay` (`main` is Production/Locked — never coded on directly)
-- **Last Checkpoint:** **C2 (pending hash)** (2026-09-11 23:17) — Cell 22 execution proof captured
-  (5/5, 100%, both assertions passed incl. `score == 5` DoD formalization).
-- **Next Single Action:** Cells 23/24 are static markdown (case studies, workflow summary) — likely
-  just a Pilot read-through, no C1 needed unless edits are wanted. Cell 25 (Reflection) needs the
-  Pilot's own written answers, **including "Questions for further exploration."** Cell 26 (Lab
-  Summary) is static. Confirm how you want to handle 23/24/26 (skip vs. formal C1), then move to
-  Cell 25.
+- **Last Checkpoint:** **C2 `3ade4bc`** (2026-09-11 23:17) — Cell 22 execution proof captured
+  (5/5, 100%, both assertions passed incl. `score == 5` DoD formalization). Confirmed pushed and
+  CI-checked (invariant #4 passes as of this pause).
+- **Full build report:** [The SingleEpoch Ledger](https://claude.ai/code/artifact/54b567b5-e1f0-41cd-bc9f-8e0cf637774f)
+  — methodology, results, governance, and every bug caught pre-run, as of this checkpoint.
+- **Next Single Action (on resume):** Cells 23/24/26 are confirmed fully static (read on
+  2026-09-11 — no TODOs, no blanks; a Pilot read-through is optional, no C1 needed). Go straight to
+  **Cell 25 (Reflection)** — the Pilot's own written answers, **including "Questions for further
+  exploration,"** the exact field Attempt 1 lost points for leaving blank. After Cell 25: C4
+  Reflection Interview, then the C5 Export Gate (Colab run-all → 3 PDFs).
 - **⚠️ Standing reminder (do not lose on Cold Start):** this build is **Attempt 2** of this exact
   lab. Attempt 1's grading feedback (2026-09-10, Viswanatha Rao, 100/100 with a -2/+2 offset)
   docked points specifically for leaving Cell 25's "Questions for further exploration" blank. See
@@ -154,3 +158,5 @@
 | 2026-09-11 22:58 | Cell 18 C1 approved, prepared, Pilot-verified + C2 | C1 approved: illustrate six ML data types (numerical continuous/discrete, categorical nominal/ordinal, text, boolean) with examples and use cases — first purely conceptual cell, no dependency on `df`/`X`/`y`/models. Two added L4 assertions: every category name matches a known use-case tag (catches a category silently printing a blank "Use case:" line if ever renamed); exactly 6 categories exist. Pilot ran it: `[13]` — all 6 blocks printed real use-case text, no blanks, both assertions passed. `docs/units/0018-data-types-in-ml.md` written and lints clean. `scripts/execution_proof_gate.py` re-run after adding Cell 18 to the Unit Log: ✅ PASS. |
 | 2026-09-11 23:11 | Cell 20 C1 approved, prepared, Pilot-verified + C2 | C1 approved: hands-on feature-choice task. Pilot chose `flavanoids`/`color_intensity`/`proline` (classically strong wine-cultivar separators) over the template's default, replacing the `TODO` — a direct follow-up to Cell 10's flagged limitation about the main model's less-differentiated features. Three added L4 assertions: `X_your.shape==(178,3)`; split accounting; accuracy range `[0,1]`. Pilot ran it: `[14]` — accuracy **0.917, an exact tie** with the main 4-feature model. Corrected post-run: the template's `if your_accuracy > results[...]` treats a tie as "not improved" and printed the 🤔 message, which is misleading — matching accuracy with one fewer feature is itself a real, worth-noting result, not underperformance. `docs/units/0020-hands-on-feature-choice.md` written, then corrected (Visual Sanity Check + Journal Point) to state this honestly — lints clean. `scripts/execution_proof_gate.py` re-run after adding Cell 20: ✅ PASS. |
 | 2026-09-11 23:17 | Cell 22 C1 approved, prepared, Pilot-verified + C2 | C1 approved: 5-scenario assessment quiz (supervised/unsupervised/reinforcement recognition). Two added L4 assertions: input-count alignment; `score == 5`, formalizing DoD item 6 ("Assessment answers 5/5") as something the code proves rather than an eyeballed printed score. Pilot ran it: `[15]` — 5/5 (100%), both assertions passed. `docs/units/0022-assessment-ml-types.md` written and lints clean. `scripts/execution_proof_gate.py` re-run after adding Cell 22: ✅ PASS. Only markdown-only cells (23, 24, 25, 26) remain in the notebook. |
+| 2026-09-11 | Report published + Cells 23/24 confirmed static | Full build report published as an Artifact ("The SingleEpoch Ledger" — https://claude.ai/code/artifact/54b567b5-e1f0-41cd-bc9f-8e0cf637774f), pinned to the Pilot's sidebar. Read Cells 23 (Real-World Case Studies) and 24 (Workflow Summary) in full: both confirmed fully static markdown, no TODOs or blanks, no C1 needed. |
+| 2026-09-11 | **Checkpoint — Pilot break** | Pilot requested a pause. All documents (`progress.md`, `checkpoints.md`) confirmed current: last commit `3ade4bc` (Cell 22) is pushed and CI-checked, all 4 ADR 0005 invariants pass, working tree has no uncommitted notebook/code changes. Nothing mid-flight — next action on resume is Cell 25 (Reflection), a Pilot-authored markdown cell, not an Agent build step. Cold Start on return: re-read this Snapshot, confirm branch/last-commit match, re-run the Setup Gate, then proceed to Cell 25. |
