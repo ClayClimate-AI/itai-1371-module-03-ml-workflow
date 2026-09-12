@@ -17,17 +17,15 @@
 
 ## Snapshot
 
-- **Current Stage:** Builder Loop (Phase 2) — C0 APPROVED. **DoD item 5 (Learning-Curve
-  overfitting check, 27 cells) is now COMPLETE** — both models show healthy generalization
-  (gaps 0.035 / 0.038). Cells 3, 5, 6, 8, 10, 11, 12, 13, 14, 16 committed & Pilot-verified with
-  real execution proof (`[3]`–`[12]`, no gaps). Cell 18 (old Cell 16, Part 6 — Data Types in ML)
-  is next; everything from here on is the notebook's remaining conceptual/assessment sections.
+- **Current Stage:** Builder Loop (Phase 2) — C0 APPROVED. DoD item 5 (Learning-Curve check,
+  27 cells) is complete. Cells 3, 5, 6, 8, 10, 11, 12, 13, 14, 16, 18 committed & Pilot-verified
+  with real execution proof (`[3]`–`[13]`, no gaps). Cell 20 (Part 7 — Hands-On Practice) is next.
 - **Working Branch:** `build/lab03-josephclay` (`main` is Production/Locked — never coded on directly)
-- **Last Checkpoint:** **C2 (pending hash)** (2026-09-11 22:28) — Learning-Curve cell execution
-  proof captured (LogReg gap 0.035, Tree gap 0.038, both ✅, 2 assertions passed).
-- **Next Single Action:** Pilot to approve the **C1 P-I-O-F for Cell 18 (Part 6 — Understanding
-  Different Data Types in ML)**. On approval, prepare the unit per ADR 0005 (P-I-O-F + the 6
-  enrichment fields in `docs/units/0018-*.md`), Pilot runs it, then C2.
+- **Last Checkpoint:** **C2 (pending hash)** (2026-09-11 22:58) — Cell 18 execution proof captured
+  (all 6 data-type categories printed a real use-case line, 2 assertions passed).
+- **Next Single Action:** Pilot to approve the **C1 P-I-O-F for Cell 20 (Part 7 — Hands-On
+  Practice: build your own model with chosen features)**. On approval, prepare the unit per
+  ADR 0005 (P-I-O-F + the 6 enrichment fields in `docs/units/0020-*.md`), Pilot runs it, then C2.
 - **⚠️ Standing reminder (do not lose on Cold Start):** this build is **Attempt 2** of this exact
   lab. Attempt 1's grading feedback (2026-09-10, Viswanatha Rao, 100/100 with a -2/+2 offset)
   docked points specifically for leaving Cell 25's "Questions for further exploration" blank. See
@@ -90,7 +88,8 @@
 | Cell 12 (Part 5 Step 3 — Model Training: scale train-only + train 2 models, 3 L4 assertions) | `d7407cf` | **Pilot-verified ✅ ran as `[9]`** — both models trained (Logistic Regression, Decision Tree); scaling centered + finite; all 3 assertions passed. `docs/units/0012-scale-and-train-models.md`. |
 | Cell 13 (Part 5 Step 4 — Model Evaluation + train/test gap check, 3 L4 assertions) | `2bc9319` | **Pilot-verified ✅ ran as `[10]`** — LogReg: Test 0.917/Train 0.866 (gap -0.050); Tree: Test 0.833/Train 0.880 (gap 0.047); both ✅ small; best model LogReg; all 3 assertions passed. `docs/units/0013-evaluate-models.md`. |
 | Cell 14 (Part 5 Step 5 — Model Interpretation: confusion matrix, 3 L4 assertions incl. cross-check) | `77f322d` | **Pilot-verified ✅ ran as `[11]`** — cm diagonal 12+14+7=33/36=0.917, matches Cell 13 exactly (cross-check assertion passed); class_2's 3 misses to class_1 confirm its 0.70 recall. `docs/units/0014-confusion-matrix.md`. |
-| Cell 16 (Step 6, Amendment — Learning Curves overfitting check, new cell, 2 L4 assertions) | (C2 pending) | **Pilot-verified ✅ ran as `[12]`** — LogReg gap 0.035, Tree gap 0.038, both ✅ healthy generalization; **DoD item 5 (27 cells) now complete**. `docs/units/0016-learning-curves-overfitting-check.md`. |
+| Cell 16 (Step 6, Amendment — Learning Curves overfitting check, new cell, 2 L4 assertions) | `1a18275` | **Pilot-verified ✅ ran as `[12]`** — LogReg gap 0.035, Tree gap 0.038, both ✅ healthy generalization; **DoD item 5 (27 cells) now complete**. `docs/units/0016-learning-curves-overfitting-check.md`. |
+| Cell 18 (Part 6 — Data Types in ML, 2 L4 assertions) | (C2 pending) | **Pilot-verified ✅ ran as `[13]`** — all 6 categories printed a real use-case line, no silent blanks; both assertions passed. `docs/units/0018-data-types-in-ml.md`. |
 
 ---
 
@@ -147,3 +146,4 @@
 | 2026-09-11 22:21 | Cell 14 C1 approved, prepared, Pilot-verified + C2 | C1 approved: confusion matrix heatmap for the best model. Three added L4 assertions, the third a cross-cell consistency check: `cm.shape==(3,3)`; `cm.sum()==len(y_test)`; `np.trace(cm)/cm.sum()` isclose to `results[best_model]` — independently recomputes accuracy from the confusion matrix and proves it matches Cell 13's `accuracy_score` exactly. Pilot ran it: `[11]` — diagonal 12+14+7=33/36=0.917 (matches Cell 13 exactly, assertion passed); class_2's 3 misclassifications into class_1 visibly confirm its 0.70 recall from Cell 13's report. `docs/units/0014-confusion-matrix.md` written and lints clean. `scripts/execution_proof_gate.py` re-run after adding Cell 14 to the Unit Log: ✅ PASS. |
 | 2026-09-11 22:28 | Learning-Curve cell (C0 Amendment) — built, 2 bugs caught pre-run, Pilot-verified + C2 | First genuinely NEW cell (not editing an existing template cell): inserted markdown header + code cell at index 15/16, after Cell 14, shifting every cell from old Cell 15 ("Part 6...") onward by +2 (25→27 cells, completing the DoD 5 amendment). Two bugs found and fixed by reading the generated code before handing it to the Pilot (Agent cannot execute the payload notebook to test it): (1) a Unicode surrogate-pair literal crashed the initial write — fixed by using named-escape/direct Unicode characters instead; (2) `train_sizes` starting at 10% risked a `ValueError` from `StratifiedKFold(cv=5)` starving the smallest class in a ~14-sample subset — raised the floor to 30%; (3) a doubled `{{flag}}` in an f-string would have printed the literal text `{flag}` instead of the value — caught by re-reading the code, fixed to `{flag}`. Two L4 assertions added: learning-curve output shapes align; both mean-accuracy arrays stay in `[0,1]`. Pilot ran it: `[12]` — Logistic Regression gap 0.035, Decision Tree gap 0.038, both `✅ small gap -- good generalization`; both models' training/validation lines converge as training size grows from 33→113 samples — the "wow chart" showing neither model overfit. `docs/units/0016-learning-curves-overfitting-check.md` written, Journal Point updated post-run with the real numbers, lints clean. `scripts/execution_proof_gate.py` re-run after adding Cell 16: ✅ PASS. **DoD item 5 (27 cells, Learning-Curve check) is now complete.** |
 | 2026-09-11 | Attempt-1 feedback logged | Pilot confirmed this build is **Attempt 2** of this exact lab (not a different assignment). Attempt 1's grading feedback (2026-09-10, Viswanatha Rao, 100/100 with a -2/+2 offset) specifically docked points for leaving Cell 25's "Questions for further exploration" blank. Logged as a standing reminder in the Snapshot and added to DoD item 6 in `docs/STEP0_Initial_Contract.md` so it surfaces on every Cold Start resume until Cell 25 is actually answered. |
+| 2026-09-11 22:58 | Cell 18 C1 approved, prepared, Pilot-verified + C2 | C1 approved: illustrate six ML data types (numerical continuous/discrete, categorical nominal/ordinal, text, boolean) with examples and use cases — first purely conceptual cell, no dependency on `df`/`X`/`y`/models. Two added L4 assertions: every category name matches a known use-case tag (catches a category silently printing a blank "Use case:" line if ever renamed); exactly 6 categories exist. Pilot ran it: `[13]` — all 6 blocks printed real use-case text, no blanks, both assertions passed. `docs/units/0018-data-types-in-ml.md` written and lints clean. `scripts/execution_proof_gate.py` re-run after adding Cell 18 to the Unit Log: ✅ PASS. |
