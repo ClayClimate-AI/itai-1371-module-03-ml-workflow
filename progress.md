@@ -18,16 +18,16 @@
 ## Snapshot
 
 - **Current Stage:** Builder Loop (Phase 2) — C0 APPROVED (DoD amended to 27 cells for the Learning-Curve
-  overfitting check). Cells 3, 5, 6, 8, 10, 11, 12, 13 committed & Pilot-verified with real
-  execution proof (`[3]`/`[4]`/`[5]`/`[6]`/`[7]`/`[8]`/`[9]`/`[10]`). Cell 14 (Part 5 Step 5 —
-  Model Interpretation: confusion matrix) is next.
+  overfitting check). Cells 3, 5, 6, 8, 10, 11, 12, 13, 14 committed & Pilot-verified with real
+  execution proof (`[3]`/`[4]`/`[5]`/`[6]`/`[7]`/`[8]`/`[9]`/`[10]`/`[11]`). The new **Learning-Curve
+  cell** (Amendment, after Cell 14) is next — the last cell before the 27-cell DoD is complete.
 - **Working Branch:** `build/lab03-josephclay` (`main` is Production/Locked — never coded on directly)
-- **Last Checkpoint:** **C2 (pending hash)** (2026-09-11 22:15) — Cell 13 execution proof captured
-  (both models evaluated, train/test gap check ✅ for both, best model Logistic Regression, 3
-  assertions passed).
-- **Next Single Action:** Pilot to approve the **C1 P-I-O-F for Cell 14 (Part 5 Step 5 — Model
-  Interpretation: confusion matrix for the best model)**. On approval, prepare the unit per
-  ADR 0005 (P-I-O-F + the 6 enrichment fields in `docs/units/0014-*.md`), Pilot runs it, then C2.
+- **Last Checkpoint:** **C2 (pending hash)** (2026-09-11 22:21) — Cell 14 execution proof captured
+  (confusion matrix diagonal 33/36=0.917, cross-checked against Cell 13, 3 assertions passed).
+- **Next Single Action:** Pilot to approve the **C1 P-I-O-F for the new Learning-Curve cell**
+  (`sklearn.model_selection.learning_curve` for both models, plotted train-vs-validation gap — the
+  DoD item 5 amendment). On approval, prepare the unit per ADR 0005 (P-I-O-F + the 6 enrichment
+  fields in `docs/units/0015-*.md`), Pilot runs it, then C2.
   **Time-critical: completing Sept 11; critical path = 3 PDFs.**
 - **Blocking Gate:** C1 (per-unit P-I-O-F for Cell 10) — approval needed before the cell is prepared.
 
@@ -83,7 +83,8 @@
 | Cell 10 (Part 5 Step 1 — Data Preparation: select X/y, 3 L4 assertions) | `b43a135` | **Pilot-verified ✅ ran as `[7]`** — X shape (178,4), y shape (178,), alignment confirmed; all 3 assertions passed. `docs/units/0010-select-features-target.md`. |
 | Cell 11 (Part 5 Step 2 — Data Splitting: stratified 80/20, 3 L4 assertions) | `2595fc8` | **Pilot-verified ✅ ran as `[8]`** — 142/36 split; train [47,57,38] + test [12,14,10] = original [59,71,48]; all 3 assertions passed. `docs/units/0011-train-test-split.md`. |
 | Cell 12 (Part 5 Step 3 — Model Training: scale train-only + train 2 models, 3 L4 assertions) | `d7407cf` | **Pilot-verified ✅ ran as `[9]`** — both models trained (Logistic Regression, Decision Tree); scaling centered + finite; all 3 assertions passed. `docs/units/0012-scale-and-train-models.md`. |
-| Cell 13 (Part 5 Step 4 — Model Evaluation + train/test gap check, 3 L4 assertions) | (C2 pending) | **Pilot-verified ✅ ran as `[10]`** — LogReg: Test 0.917/Train 0.866 (gap -0.050); Tree: Test 0.833/Train 0.880 (gap 0.047); both ✅ small; best model LogReg; all 3 assertions passed. `docs/units/0013-evaluate-models.md`. |
+| Cell 13 (Part 5 Step 4 — Model Evaluation + train/test gap check, 3 L4 assertions) | `2bc9319` | **Pilot-verified ✅ ran as `[10]`** — LogReg: Test 0.917/Train 0.866 (gap -0.050); Tree: Test 0.833/Train 0.880 (gap 0.047); both ✅ small; best model LogReg; all 3 assertions passed. `docs/units/0013-evaluate-models.md`. |
+| Cell 14 (Part 5 Step 5 — Model Interpretation: confusion matrix, 3 L4 assertions incl. cross-check) | (C2 pending) | **Pilot-verified ✅ ran as `[11]`** — cm diagonal 12+14+7=33/36=0.917, matches Cell 13 exactly (cross-check assertion passed); class_2's 3 misses to class_1 confirm its 0.70 recall. `docs/units/0014-confusion-matrix.md`. |
 
 ---
 
@@ -137,3 +138,4 @@
 | 2026-09-11 22:03 | Cell 11 C1 approved, prepared, Pilot-verified + C2 | C1 approved: stratified 80/20 train/test split — the boundary the whole overfitting question depends on. Three added L4 assertions: split accounting (`len(X_train)+len(X_test)==len(X)`), X/y alignment, and stratification actually held (`set(y_train.unique())==set(y_test.unique())==set(y.unique())`). Agent prepared the cell via a validated JSON round-trip, then Pilot ran it: `[8]` — 142/36 split, train [47,57,38] + test [12,14,10] = original [59,71,48] per class, all assertions passed. `docs/units/0011-train-test-split.md` written and lints clean. `scripts/execution_proof_gate.py` re-run after adding Cell 11 to the Unit Log: ✅ PASS. |
 | 2026-09-11 22:08 | Cell 12 C1 approved, prepared, Pilot-verified + C2 | C1 approved: scale features (fit on train only) and train Logistic Regression + Decision Tree — first cell to actually produce a trained model. Three added L4 assertions: `X_train_scaled` centered (`abs(mean) < 0.01`); both scaled arrays finite; both models actually trained (`len(trained_models)==len(models)==2`). Agent prepared the cell via a validated JSON round-trip, then Pilot ran it: `[9]` — both models trained, all assertions passed. `docs/units/0012-scale-and-train-models.md` written and lints clean. `scripts/execution_proof_gate.py` re-run after adding Cell 12 to the Unit Log: ✅ PASS. |
 | 2026-09-11 22:15 | Cell 13 C1 approved, prepared, Pilot-verified + C2 | C1 approved: evaluate both models (accuracy, classification report) plus a new train/test accuracy gap check (`⚠️` if `gap > 0.10`, else `✅`) — a lightweight overfitting signal ahead of the full Learning-Curve cell. Three added L4 assertions: prediction-length match, accuracy range `[0,1]` for both train and test, and the three per-model dicts staying in sync. Pilot ran it: `[10]` — Logistic Regression Test 0.917/Train 0.866 (gap **-0.050**, test scored higher — not a bug, just a 36-sample test set landing on an easier subset by chance); Decision Tree Test 0.833/Train 0.880 (gap 0.047); both flagged `✅`; best model Logistic Regression. `docs/units/0013-evaluate-models.md` written, then corrected post-run (Visual Sanity Check and Journal Point both updated to reflect the negative-gap result honestly rather than the assumed train-≥-test pattern) — lints clean. `scripts/execution_proof_gate.py` re-run after adding Cell 13 to the Unit Log: ✅ PASS. |
+| 2026-09-11 22:21 | Cell 14 C1 approved, prepared, Pilot-verified + C2 | C1 approved: confusion matrix heatmap for the best model. Three added L4 assertions, the third a cross-cell consistency check: `cm.shape==(3,3)`; `cm.sum()==len(y_test)`; `np.trace(cm)/cm.sum()` isclose to `results[best_model]` — independently recomputes accuracy from the confusion matrix and proves it matches Cell 13's `accuracy_score` exactly. Pilot ran it: `[11]` — diagonal 12+14+7=33/36=0.917 (matches Cell 13 exactly, assertion passed); class_2's 3 misclassifications into class_1 visibly confirm its 0.70 recall from Cell 13's report. `docs/units/0014-confusion-matrix.md` written and lints clean. `scripts/execution_proof_gate.py` re-run after adding Cell 14 to the Unit Log: ✅ PASS. |
