@@ -44,16 +44,24 @@ an L3 test where applicable, and a C2 atomic commit — before the Pilot runs th
 
 ## Definition of Done (DoD)
 
-1. All 25 cells execute sequentially, counters `[1]..[N]`, **zero gaps**.
+1. All 27 cells execute sequentially, counters `[1]..[N]`, **zero gaps** *(was 25 — see Amendment
+   2026-09-11 below: +1 markdown header, +1 code cell for the Learning-Curve overfitting check)*.
 2. Dataset assertions hold: shape (178,13), 3 classes, 0 nulls.
 3. No data leakage: scaler fit on **train only**.
 4. Both models trained; evaluation + best-model selection + confusion matrix rendered.
-5. Assessment answers 5/5; reflection markdown completed by Pilot.
-6. L4 validators emit `PASS` (vocal success) and are proven to catch known-bad input (L3).
-7. CI green on the PR (clean-runner objective proof) before merge to `main`.
-8. Three PDFs exported per C5 gate, named exactly per Product Spec §3.
-9. C4 verbatim reflection interview transcript captured.
-10. `progress.md` / `checkpoints.md` / `README.md` reflect final state.
+5. **New (Amendment 2026-09-11):** For both trained models, a learning curve (training-size vs.
+   training/validation accuracy, via `sklearn.model_selection.learning_curve`) is rendered and the
+   train/validation gap is stated explicitly — proof of generalization vs. overfitting, not just a
+   single test-set number.
+6. Assessment answers 5/5; reflection markdown completed by Pilot, **including a real, non-blank
+   answer to "Questions for further exploration"** (Cell 25) — Attempt 1's grading feedback
+   (Sep 10, Viswanatha Rao, 100/100 with a -2/+2 offset) specifically docked points for leaving
+   this exact field blank. Do not resubmit with `[Your questions]` still unfilled.
+7. L4 validators emit `PASS` (vocal success) and are proven to catch known-bad input (L3).
+8. CI green on the PR (clean-runner objective proof) before merge to `main`.
+9. Three PDFs exported per C5 gate, named exactly per Product Spec §3.
+10. C4 verbatim reflection interview transcript captured.
+11. `progress.md` / `checkpoints.md` / `README.md` reflect final state.
 
 ---
 
@@ -62,10 +70,26 @@ an L3 test where applicable, and a C2 atomic commit — before the Pilot runs th
 **In scope**
 - Executing/validating the existing lab notebook; adding L4 in-notebook validators; contract tests;
   CI; the three deliverables.
+- **Added by Amendment (2026-09-11):** one additional unit — a Learning-Curve overfitting check
+  (new markdown header + code cell, placed after Part 5 Step 5 Model Interpretation) — for both
+  already-specified models, using `sklearn.model_selection.learning_curve`. Pilot's rationale: a
+  single test-set accuracy number doesn't prove the model generalized rather than memorized; the
+  train-vs-validation curve gap does. Confirmed this doesn't introduce a new model, dataset, or
+  hyperparameter search — it evaluates the two models the lab already specifies.
 
 **Out of scope (anti-over-engineering)**
 - No new models/datasets beyond what the notebook specifies; no hyperparameter tuning beyond the
-  given `max_depth=3`; no deployment; no changes to pedagogical intent.
+  given `max_depth=3`; no deployment; no further pedagogical additions beyond the one unit above
+  without another explicit Amendment.
+
+## Amendment Log
+
+- **2026-09-11 — Contract Drift:** Pilot requested a Learning-Curve overfitting check (the "big
+  chart" version: `sklearn.model_selection.learning_curve`, plotted, not just a train/test accuracy
+  print). This adds a cell beyond the original 25, so it's an explicit Scope + DoD amendment per
+  the blueprint's Amendment Rule (§2.2), not a silent addition. Pilot confirmed it doesn't add a
+  new model, dataset, or hyperparameter search. DoD updated to 27 cells + new item 5; Scope updated
+  above. Logged in `progress.md`'s Failure & Amendment Logs as a Contract Drift entry.
 
 **Hard constraints**
 - Agent NEVER runs cells (Pilot-locked). Colab used ONLY for the C5 PDF export.

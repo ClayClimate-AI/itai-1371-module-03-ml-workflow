@@ -1,167 +1,122 @@
-<!--
-  README — LIVING DOCUMENT.
-  Updated incrementally at every checkpoint alongside progress.md and checkpoints.md.
-  Merged into the build process per Pilot directive; do not deviate.
-  Badges + Build Progress + Checkpoint Ledger reflect the CURRENT state of the build.
--->
-
-# Module 3 — Machine Learning Workflow & Types of Learning
+# Wine Classification — ML Workflow (ITAI 1371, Module 3)
 
 <p>
   <img alt="Course" src="https://img.shields.io/badge/Course-ITAI%201371-0A66C2">
   <img alt="Module" src="https://img.shields.io/badge/Module-03-1F6FEB">
-  <img alt="Subject" src="https://img.shields.io/badge/Subject-Wine%20Classification-8E44AD">
-  <img alt="Points" src="https://img.shields.io/badge/Points-100-success">
-  <img alt="Due" src="https://img.shields.io/badge/Due-Thu%2011%3A59pm-important">
+  <img alt="Task" src="https://img.shields.io/badge/Task-Wine%20Classification-8E44AD">
+  <img alt="Python" src="https://img.shields.io/badge/Python-3.12%20%7C%203.14-3776AB?logo=python&logoColor=white">
+  <img alt="CI" src="https://img.shields.io/badge/CI-GitHub%20Actions-2088FF?logo=githubactions&logoColor=white">
+  <img alt="License" src="https://img.shields.io/badge/License-Educational-lightgrey">
 </p>
 
-<p>
-  <img alt="Protocol" src="https://img.shields.io/badge/Protocol-Cell--by--Cell%20Master%20Blueprint-2C3E50">
-  <img alt="Architecture" src="https://img.shields.io/badge/Architecture-Zero--Defect-2C3E50">
-  <img alt="Methodology" src="https://img.shields.io/badge/Methodology-Spec--Driven%20Gates-2C3E50">
-</p>
-
-<p>
-  <img alt="Stage" src="https://img.shields.io/badge/Stage-Pre--Flight%20Setup-yellow">
-  <img alt="Checkpoint" src="https://img.shields.io/badge/Checkpoint-C0%20READY%20(awaiting%20sign--off)-orange">
-  <img alt="Progress" src="https://img.shields.io/badge/setup-6%2F7%20tasks%20(Setup%20Gate%20PASS)-brightgreen">
-  <img alt="Python" src="https://img.shields.io/badge/.venv-Python%203.14.6-3776AB?logo=python&logoColor=white">
-  <img alt="Cells" src="https://img.shields.io/badge/Notebook-25%20cells%20(12%20code%20%2F%2013%20md)-informational">
-</p>
-
-<p>
-  <img alt="Branch" src="https://img.shields.io/badge/branch-build%2Flab03--josephclay-6f42c1?logo=git&logoColor=white">
-  <img alt="Main" src="https://img.shields.io/badge/main-Production%2FLocked-critical">
-  <img alt="Workflow" src="https://img.shields.io/badge/workflow-PR%20%E2%86%92%20CI%20%E2%86%92%20merge-0A66C2">
-  <img alt="CI" src="https://img.shields.io/badge/CI-GitHub%20Actions%20(advisory)-yellow?logo=githubactions&logoColor=white">
-  <img alt="ADR" src="https://img.shields.io/badge/ADR-0001%2C%200002%20accepted-2C3E50">
-</p>
-
-> **This README is a living document.** It updates incrementally as the build advances, in lockstep
-> with [`progress.md`](progress.md) and [`checkpoints.md`](checkpoints.md). Together these three files
-> form a step-by-step, professor-visible trail of exactly what was done, plus clean resume points.
-
----
+An end-to-end machine-learning workflow on the classic **Wine** dataset: load and explore the data,
+run exploratory analysis, train and compare classifiers, and evaluate the results. The work is
+organized as a single Jupyter notebook backed by a reproducible environment, contract tests, and
+continuous integration.
 
 ## Overview
 
-This project executes the Module 3 lab notebook (`Module_03_Lab_Exercise.ipynb` — Wine dataset
-classification) under a disciplined, gate-driven engineering protocol rather than ad-hoc cell running.
-The **System** (immutable process: guardrails, builder loop, human checkpoints) is decoupled from the
-**Subject** (the Lab 03 ML payload). The guiding principle: *a green checkmark is not proof; a contract is proof.*
+The notebook walks through the full supervised-learning pipeline end to end:
 
-- **Authoritative protocol:** Ultimate Cell-by-Cell Master Blueprint for ML Execution
-- **Reinforcement:** Zero-Defect ML Architecture deck (adds the C5 Export Gate)
-- **Pilot (sole execution/reflection authority):** Joseph Clay
-- **Agent (proposes, pre-fills, implements to contract):** Kiro
+1. Load the Wine dataset (178 samples, 13 chemical features, 3 cultivar classes).
+2. Explore structure and class distribution.
+3. Prepare features, split into train/test, and standardize (scaler fit on the training set only).
+4. Train two models — Logistic Regression and a Decision Tree — and compare them.
+5. Evaluate with accuracy, a classification report, and a confusion matrix, then interpret the results.
+6. Run a **learning-curve analysis** on both models to check for overfitting — see [Results](#results) below.
 
----
+Every step includes integrity checks (shape, alignment, and range assertions) so a mistake in an
+earlier cell fails loudly instead of silently producing a wrong result downstream.
 
-## Deliverables
+## Results
 
-| # | Deliverable | Status | Naming convention |
-| --- | --- | --- | --- |
-| 1 | Executed notebook exported as PDF (all cells + outputs) | ⏳ Not started | `L03_SingleEpoch_ITAI1371.pdf` |
-| 2 | Reflective journal (1–2 pages) | ⏳ Not started | `L03Journal_R_SingleEpoch_ITAI1371.pdf` |
-| 3 | Contribution journal (1–2 pages) | ⏳ Not started | `L03Journal_C_SingleEpoch_ITAI1371.pdf` |
+**Logistic Regression** is the best-performing model, reaching **91.7% test accuracy**, ahead of
+the Decision Tree's 83.3%.
 
----
+The learning-curve check below is the strongest evidence in the project that this result is
+trustworthy rather than a lucky split: both models' training and validation accuracy converge as
+training size grows, with small final gaps (0.035 for Logistic Regression, 0.038 for the Decision
+Tree) — direct evidence that neither model memorized the training data.
 
-## Build Progress
+![Learning curves for Logistic Regression and Decision Tree, showing training and validation accuracy converging as training set size increases](assets/learning_curves.png)
 
-```
-[██████████░░░░░░░░░░░░░░]  Phase 1: Pre-Flight Setup   (in progress)
-[░░░░░░░░░░░░░░░░░░░░░░░░]  Phase 2: Builder Loop        (locked until C0)
-[░░░░░░░░░░░░░░░░░░░░░░░░]  Phase 3: Delivery + C5 Export (locked)
-```
+This also settles which model actually explains the accuracy gap between them: the Decision Tree
+scored lower not because it overfit (its own gap is just as healthy as Logistic Regression's), but
+because a tree capped at `max_depth=3` can only draw a small number of boxy decision boundaries —
+a worse geometric fit for how the three wine classes separate than the smooth line Logistic
+Regression draws.
 
-### Setup checklist (through C0)
-- [x] Context pass over all source documents (blueprint, deck, notebook, instructions)
-- [x] Bubble created — `docs/adr`, `specs`, `src`, `tests`, `.venv`
-- [x] Living State initialized — `progress.md`, `checkpoints.md`, and this README
-- [x] Collaborative Git workflow merged — branch `build/lab03-josephclay`, ADR 0001, CI workflow
-- [x] Specs drafted — `Product_Spec.md`, `Tech_Spec.md` (group name `SingleEpoch` locked)
-- [x] Step 0 — P-I-O-F + Definition of Done + Scope/Constraints (`docs/STEP0_Initial_Contract.md`)
-- [x] Layer 1 Setup Gate — ✅ PASS (deps present, diff clean, `load_wine` OK)
-- [ ] **C0 Human Gate** — Pilot sign-off (WAIT; no construction before this)
+## Dataset
 
----
+The [Wine recognition dataset](https://scikit-learn.org/stable/datasets/toy_dataset.html#wine-recognition-dataset)
+ships with scikit-learn (`sklearn.datasets.load_wine`). It contains 178 samples described by 13
+continuous chemical-analysis features, labeled across 3 classes. No external download is required.
 
-## Guardrail Ladder
-
-| Layer | Gate | Meaning |
-| --- | --- | --- |
-| L0 | Bubble | Isolated project-level virtual environment (`.venv`) |
-| L1 | Setup Gate | Validates 100% dependency presence before execution |
-| L2 | P-I-O-F (C1) | Execution sequence planned & approved before code |
-| L3 | Tests (TDD) | Known-bad inputs forced to fail |
-| L4 | Asserts | Live integrity checks bounding every transform |
-| L5 | CI + Hooks | Re-execution on a clean, objective machine state |
-
-## Checkpoint Ledger (summary)
-
-| Gate | Name | Status |
-| --- | --- | --- |
-| C0 | Initial Contract | 🟡 PENDING |
-| C1 | P-I-O-F (per unit) | ⚪ Not reached |
-| C2 | Atomic Commit | ⚪ Not reached |
-| C3 | Debugging / ADR | ⚪ Not reached |
-| C4 | Reflection Interview | ⚪ Not reached |
-| C5 | Export Gate | ⚪ Not reached |
-
-_Full definitions and the authoritative ledger live in [`checkpoints.md`](checkpoints.md)._
-
----
-
-## Collaborative Git Workflow (Layer 5 — Objective Proof)
-
-> *A local pass is subjective; a repository pass is objective.* `main` is **Production/Locked** —
-> we never code on it directly. Recorded in [`docs/adr/0001-collaborative-git-workflow.md`](docs/adr/0001-collaborative-git-workflow.md).
-
-```
-  feature branch            Pull Request            GitHub Actions CI            main
-  build/lab03-josephclay  ───────────────►  clean Ubuntu runner  ──(green)──►  Production/Locked
-   (atomic C2 commits)                       install • L1 • L3 • L5            (sync after merge)
-                                             (red CI blocks the merge)
-```
-
-1. **Branch** — `git checkout -b build/lab03-josephclay` (isolated safe zone; done).
-2. **Edit & commit** — SDD + TDD + Builder Loop; one unit = one atomic commit (C2).
-3. **Pull Request** — push the branch and open a PR into `main`.
-4. **CI** — GitHub Actions re-runs the gates on a blank machine; a failure **blocks the merge**.
-5. **Sync** — after approval + merge, pull the updated `main` locally.
-
-**Branch Protection** on `main` (require PR + require CI green) is the target end-state; it must be
-enabled in the GitHub repository settings. Until then, CI is *advisory* and the Pilot enforces the rule.
-
----
-
-## Repository Layout
+## Project structure
 
 ```
 .
-├── .github/workflows/ci.yml   # L5: clean Ubuntu runner → install → L1 → L3 → L5 (notebook execute)
-├── .venv/                 # L0: isolated environment (Python 3.14.6)
-├── docs/adr/
-│   └── 0001-collaborative-git-workflow.md
-├── specs/
-│   ├── Product_Spec.md    # Why/What (precedence: HIGH)
-│   └── Tech_Spec.md       # How (precedence: LOW)
-├── src/                   # implementation logic
-├── tests/                 # L3: contract tests
-├── Module_03_Lab_Exercise.ipynb   # the Subject (payload)
-├── progress.md            # living state: snapshot & logs
-├── checkpoints.md         # gate reference & resume protocol
-└── README.md              # this living, badged overview
+├── Module_03_Lab_Exercise.ipynb   # main notebook (analysis + models)
+├── assets/                        # exported chart images (e.g. learning curves)
+├── requirements.txt               # Python dependencies
+├── scripts/setup_gate.py          # environment / dependency check
+├── src/                           # supporting implementation code
+├── tests/                         # contract tests
+├── specs/                         # product & technical specifications
+├── docs/adr/                      # architecture decision records
+└── .github/workflows/ci.yml       # CI pipeline
 ```
 
----
+## Getting started
 
-## Core Mandates
+Requires Python 3.12+ (developed on 3.14; CI runs on 3.12).
 
-- Never batch. **Never proceed on assumed consent.**
-- The Agent is forbidden from self-verifying code — **only the Pilot runs cells.**
-- TDD ordering (write the failing assertion first) is non-negotiable.
-- Every non-obvious technical decision gets a numbered ADR in `docs/adr/`.
+```bash
+# 1. Create and activate a virtual environment
+python -m venv .venv
+source .venv/bin/activate            # Windows: .venv\Scripts\activate
 
-<!-- LAST-UPDATED: 2026-09-11 04:16 CT — Specs + Step 0 written; Layer 1 Setup Gate PASS; C0 package READY (awaiting Pilot sign-off). -->
+# 2. Install dependencies
+pip install -r requirements.txt
+
+# 3. (Optional) verify the environment is set up correctly
+python scripts/setup_gate.py
+
+# 4. Launch the notebook
+jupyter notebook Module_03_Lab_Exercise.ipynb
+```
+
+Run the notebook top to bottom (Kernel → Restart & Run All) so cells execute in order.
+
+## Testing & CI
+
+```bash
+pytest -q tests
+```
+
+Every push and pull request runs the [CI pipeline](.github/workflows/ci.yml) on a clean runner, which
+installs dependencies, runs the environment check and tests, and executes the notebook end to end to
+confirm it reproduces without errors. A local pre-commit hook can run the same fast checks before each
+commit — enable it once per clone with:
+
+```bash
+git config core.hooksPath .githooks
+```
+
+## Development
+
+Development happens on feature branches and is merged into `main` via pull request after CI passes.
+Notable technical decisions are recorded as [architecture decision records](docs/adr/), and
+requirements are captured under [`specs/`](specs/).
+
+## Deliverables
+
+| # | Deliverable | Format | File |
+| --- | --- | --- | --- |
+| 1 | Executed notebook with all outputs | PDF | `L03_SingleEpoch_ITAI1371.pdf` |
+| 2 | Reflective journal | PDF (1–2 pages) | [`L03Journal_R_SingleEpoch_ITAI1371.pdf`](L03Journal_R_SingleEpoch_ITAI1371.pdf) |
+| 3 | Contribution journal | PDF (1–2 pages) | [`L03Journal_C_SingleEpoch_ITAI1371.pdf`](L03Journal_C_SingleEpoch_ITAI1371.pdf) |
+
+## License
+
+Coursework for ITAI 1371 (Module 3). Provided for educational purposes.

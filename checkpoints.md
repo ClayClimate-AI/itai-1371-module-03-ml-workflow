@@ -33,7 +33,22 @@
   Production/Locked; work occurs on branch `build/lab03-josephclay`; integration is PR-only; GitHub
   Actions (`.github/workflows/ci.yml`) re-runs L1/L3/L5 on a clean Ubuntu runner and a red run blocks
   the merge. Branch Protection on `main` is the target end-state (advisory until enabled). See
-  `docs/adr/0001-collaborative-git-workflow.md`.
+  `docs/adr/0001-collaborative-git-workflow.md`. A **local pre-commit hook** (`.githooks/pre-commit`,
+  activated per clone via `git config core.hooksPath .githooks`) runs the fast subset — L1 Setup Gate +
+  L3 tests — before every commit, aborting on failure; CI remains the objective backstop. See
+  `docs/adr/0003-local-precommit-hooks.md`. Commit messages follow the dual format
+  (`<type>(<scope>): <subject>  [C<gate>, verified [<n>]]`) per `docs/adr/0004-dual-format-commit-convention.md`.
+
+### ADR 0005 Invariants (enforced in the hook, and in CI except #4)
+
+| # | Invariant | Script | Catches |
+| - | --- | --- | --- |
+| 1 | Execution-Proof Gate | `scripts/execution_proof_gate.py` | A cell logged "Pilot-verified" in `progress.md` whose committed notebook shows `execution_count: null` / empty outputs. |
+| 2 | Per-Unit Documentation Gate | `scripts/unit_doc_lint.py` | A `docs/units/*.md` record missing one of the 8 required sections (see ADR 0005). |
+| 3 | Failure-Classification Gate | `scripts/failure_log_lint.py` | A Failure & Amendment Logs entry that doesn't open with `**Code Failure**` / `**Spec Failure**`. |
+| 4 | Push-Before-Verified Gate | `scripts/push_verified_gate.py` | `progress.md` marking a commit Pilot-verified before it exists on `origin/<branch>`. Local-only — not run in CI. |
+
+See `docs/adr/0005-per-unit-documentation-enrichment.md` for full rationale.
 
 ---
 
@@ -52,9 +67,11 @@
    the sole executor**. Local objective proof comes from the Bubble's L1/L3 gates and CI, not from
    the Agent executing the payload notebook.
 2. **Delivery scope:** The **local Bubble** provides objective proof (L1 setup gate, L3 contract
-   tests, L5 CI notebook execution on a clean runner). **Google Colab is used ONLY for the final
-   PDF export at the C5 Export Gate** (kernel restart → run-all `[1..N]` no gaps → visual audit →
-   headless export). Colab is not part of the build/verify loop.
+   tests, L5 CI notebook execution on a clean runner). **Amended 2026-09-12 (ADR 0006):** the C5
+   PDF export uses local `jupyter nbconvert --to webpdf` (Playwright/Chromium) instead of the
+   originally-locked Colab path — rendering already-saved outputs, never re-executing. CI's
+   `nbconvert --to notebook --execute` step remains the objective "runs clean" proof; this change
+   only affects how the final PDF artifact is produced.
 
 ---
 
@@ -63,6 +80,8 @@
 | Gate | Status | Date/Time (CT) | Pilot Sign-off | Notes |
 | --- | --- | --- | --- | --- |
 | C0 | **APPROVED** | 2026-09-11 05:07 | Joseph Clay ("Commence") | Step 0 + Setup Gate PASS accepted; risks resolved: ADR 0002 (py-version), solo member Joseph Clay, due Sept 10→11 (Canvas discrepancy). Construction authorized. |
+| C5 | **PASSED** | 2026-09-12 11:35 | Joseph Clay (confirmed visual audit) | Kernel restart → Run All: counters `[1]`–`[13]`, zero gaps, zero errors, all key results reproduced exactly (deterministic, `random_state=42`). Export via ADR 0006 (amended): first `--to webpdf` attempt clipped long code lines — caught by reading the actual rendered pages, not just checking exit code — refined to `--to html` + a wrap-CSS patch + Playwright render. Re-verified page by page: no clipping, both EDA charts, the confusion matrix, and the learning-curve chart all render fully. `L03_SingleEpoch_ITAI1371.pdf`, 23 pages. |
+| C4 | **PASSED (short form)** | 2026-09-12 | Joseph Clay | Dynamic interview per §3.4, 4 of 5 blueprint dimensions (territory novelty omitted at Pilot's discretion — noted, not silently dropped). Verbatim transcript in `reflections.md`, unedited. Questions drawn from this project's own trail: L3-vs-L4 distinction (CI vs. the scaling-order assertion), the 4 pre-run bugs caught by reading vs. running, the Learning-Curve contract-drift amendment, and the Cell 3/5 false-verification failure. |
 
 ---
 

@@ -1,0 +1,84 @@
+#!/usr/bin/env bash
+#
+# Layer 5 (shifted left) — local pre-commit gate. See docs/adr/0003-local-precommit-hooks.md.
+# Runs the FAST subset of the guardrail ladder before a commit is created, mirroring CI:
+#   L1  Setup Gate            — scripts/setup_gate.py            (always, if present)
+#   L3  Contract tests        — pytest -q tests                  (only if tests/*.py exist)
+# Plus the four ADR 0005 invariants (see docs/adr/0005-per-unit-documentation-enrichment.md):
+#   #1  Execution-Proof Gate  — scripts/execution_proof_gate.py
+#   #2  Per-Unit Doc Gate     — scripts/unit_doc_lint.py
+#   #3  Failure-Class. Gate   — scripts/failure_log_lint.py
+#   #4  Push-Before-Verified  — scripts/push_verified_gate.py    (local-only; not in CI)
+# The heavy L5 notebook execution is intentionally NOT run here (too slow per-commit); it stays in CI.
+#
+# Any non-zero gate aborts the commit. `git commit --no-verify` bypasses this hook (discouraged;
+# log any bypass in progress.md). CI remains the objective backstop that cannot be bypassed.
+
+set -euo pipefail
+
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+cd "$REPO_ROOT"
+
+# Prefer the Bubble interpreter (Layer 0) so the hook checks the same env we build in.
+if [ -x ".venv/bin/python" ]; then
+  PY=".venv/bin/python"
+else
+  PY="$(command -v python3 || command -v python)"
+fi
+
+echo "── pre-commit ─────────────────────────────────────────────"
+echo "[hook] interpreter: $PY"
+
+# ── L1: Setup Gate ─────────────────────────────────────────────
+if [ -f "scripts/setup_gate.py" ]; then
+  echo "[hook] L1 — Setup Gate: python scripts/setup_gate.py"
+  if ! "$PY" scripts/setup_gate.py; then
+    echo "[hook] ❌ L1 Setup Gate FAILED — commit aborted."
+    exit 1
+  fi
+else
+  echo "[hook] L1 — scripts/setup_gate.py not present; skipping."
+fi
+
+# ── L3: Contract tests (only when tests exist) ────────────────
+if [ -d "tests" ] && ls tests/*.py >/dev/null 2>&1; then
+  echo "[hook] L3 — Contract tests: pytest -q tests"
+  if ! "$PY" -m pytest -q tests; then
+    echo "[hook] ❌ L3 tests FAILED — commit aborted."
+    exit 1
+  fi
+else
+  echo "[hook] L3 — no tests/*.py yet; skipping (matches CI pre-C0 behavior)."
+fi
+
+# ── ADR 0005 invariant #1: Execution-Proof Gate ────────────────
+echo "[hook] Invariant #1 — Execution-Proof Gate: python scripts/execution_proof_gate.py"
+if ! "$PY" scripts/execution_proof_gate.py; then
+  echo "[hook] ❌ Execution-Proof Gate FAILED — commit aborted."
+  exit 1
+fi
+
+# ── ADR 0005 invariant #2: Per-Unit Documentation Gate ─────────
+echo "[hook] Invariant #2 — Per-Unit Doc Gate: python scripts/unit_doc_lint.py"
+if ! "$PY" scripts/unit_doc_lint.py; then
+  echo "[hook] ❌ Per-Unit Documentation Gate FAILED — commit aborted."
+  exit 1
+fi
+
+# ── ADR 0005 invariant #3: Failure-Classification Gate ─────────
+echo "[hook] Invariant #3 — Failure-Classification Gate: python scripts/failure_log_lint.py"
+if ! "$PY" scripts/failure_log_lint.py; then
+  echo "[hook] ❌ Failure-Classification Gate FAILED — commit aborted."
+  exit 1
+fi
+
+# ── ADR 0005 invariant #4: Push-Before-Verified Gate (local-only) ─
+echo "[hook] Invariant #4 — Push-Before-Verified Gate: python scripts/push_verified_gate.py"
+if ! "$PY" scripts/push_verified_gate.py; then
+  echo "[hook] ❌ Push-Before-Verified Gate FAILED — commit aborted."
+  exit 1
+fi
+
+echo "[hook] ✅ pre-commit gates passed — proceeding with commit."
+echo "───────────────────────────────────────────────────────────"
+exit 0
