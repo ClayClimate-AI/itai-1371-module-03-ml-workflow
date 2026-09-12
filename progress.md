@@ -17,29 +17,29 @@
 
 ## Snapshot
 
-- **Current Stage:** **PAUSED (intentional break) at a clean stopping point.** Builder Loop
-  (Phase 2) — C0 APPROVED. DoD item 5 (Learning-Curve check, 27 cells) is complete. Cells 3, 5, 6,
-  8, 10, 11, 12, 13, 14, 16, 18, 20, 22 committed & Pilot-verified with real execution proof
-  (`[3]`–`[15]`, no gaps) — **all 13 code cells in the notebook are done.** Only 4 markdown-only
-  cells remain (23, 24, 25, 26); none are blocked, nothing is mid-edit.
+- **Current Stage:** Builder Loop (Phase 2) — C0 APPROVED. DoD item 5 (Learning-Curve check,
+  27 cells) is complete. All 13 code cells (3–22) committed & Pilot-verified with real execution
+  proof (`[3]`–`[15]`, no gaps). Cells 23/24 confirmed fully static. **Cell 25 (Reflection) is now
+  filled in the notebook itself** — including "Questions for further exploration," the field
+  Attempt 1 lost points for leaving blank — but **not yet committed** (pending the kernel
+  restart/run-all below, so it goes in as part of a clean final state, not a partial one).
 - **Working Branch:** `build/lab03-josephclay` (`main` is Production/Locked — never coded on directly)
-- **Last Checkpoint:** **C2 `3ade4bc`** (2026-09-11 23:17) — Cell 22 execution proof captured
-  (5/5, 100%, both assertions passed incl. `score == 5` DoD formalization). Confirmed pushed and
-  CI-checked (invariant #4 passes as of this pause).
+- **Last Checkpoint:** **C2 `3ade4bc`** (2026-09-11 23:17) — Cell 22, last committed unit.
+- **Deliverable 2 done:** `L03Journal_R_SingleEpoch_ITAI1371.pdf` (2 pp, matches Cell 25's content,
+  including the corrected Decision-Tree analysis — it did NOT overfit per Cell 16's learning
+  curve; the accuracy gap is decision-boundary shape, not memorization). Not yet committed to the
+  repo (Pilot review pending).
 - **Full build report:** [The SingleEpoch Ledger](https://claude.ai/code/artifact/54b567b5-e1f0-41cd-bc9f-8e0cf637774f)
-  — methodology, results, governance, and every bug caught pre-run, as of this checkpoint.
-- **Next Single Action (on resume):** Cells 23/24/26 are confirmed fully static (read on
-  2026-09-11 — no TODOs, no blanks; a Pilot read-through is optional, no C1 needed). Go straight to
-  **Cell 25 (Reflection)** — the Pilot's own written answers, **including "Questions for further
-  exploration,"** the exact field Attempt 1 lost points for leaving blank. After Cell 25: C4
-  Reflection Interview, then the C5 Export Gate (Colab run-all → 3 PDFs).
-- **⚠️ Standing reminder (do not lose on Cold Start):** this build is **Attempt 2** of this exact
-  lab. Attempt 1's grading feedback (2026-09-10, Viswanatha Rao, 100/100 with a -2/+2 offset)
-  docked points specifically for leaving Cell 25's "Questions for further exploration" blank. See
-  `docs/STEP0_Initial_Contract.md` DoD item 6. When Cell 25 is reached, this field **must** get a
-  real, non-bracket answer from the Pilot before export.
-  **Time-critical: completing Sept 11; critical path = 3 PDFs.**
-- **Blocking Gate:** C1 (per-unit P-I-O-F for Cell 10) — approval needed before the cell is prepared.
+  — methodology, results, governance, and every bug caught pre-run (predates Cell 25/journal work).
+- **Next Single Action:** Pilot does **one clean kernel restart → Run All**, top to bottom, all
+  27 cells (Agent cannot do this — Pilot-only execution rule). Counters should land `[1]`–`[15]`
+  with zero gaps (currently `[3]`–`[15]`, built incrementally across sessions — the C5 gate
+  requires one continuous fresh run). Visual audit (no clipping/margin issues), save, then Agent
+  runs `nbconvert --to webpdf` (ADR 0006) and names the result `L03_SingleEpoch_ITAI1371.pdf`
+  (Deliverable 1). Deliverable 3 (contribution journal) still needed. Then C4 Reflection Interview.
+- **⚠️ Resolved reminder:** the Attempt-1 "Questions for further exploration" gap (2026-09-10,
+  Viswanatha Rao feedback) is now closed in both Cell 25 and Deliverable 2 — kept here as a record,
+  not an open risk.
 
 - **Layer 1 Setup Gate:** ✅ PASS (exit 0) — RE-VERIFIED on resume 2026-09-11 05:18; deps present,
   diff clean, `load_wine` 178×13/3-class OK, `.venv` Python 3.14.6.
@@ -98,7 +98,8 @@
 | Cell 16 (Step 6, Amendment — Learning Curves overfitting check, new cell, 2 L4 assertions) | `1a18275` | **Pilot-verified ✅ ran as `[12]`** — LogReg gap 0.035, Tree gap 0.038, both ✅ healthy generalization; **DoD item 5 (27 cells) now complete**. `docs/units/0016-learning-curves-overfitting-check.md`. |
 | Cell 18 (Part 6 — Data Types in ML, 2 L4 assertions) | `197620d` | **Pilot-verified ✅ ran as `[13]`** — all 6 categories printed a real use-case line, no silent blanks; both assertions passed. `docs/units/0018-data-types-in-ml.md`. |
 | Cell 20 (Part 7 — Hands-On feature choice: flavanoids/color_intensity/proline, 3 L4 assertions) | `0252c9a` | **Pilot-verified ✅ ran as `[14]`** — X_your (178,3), accuracy 0.917 exactly tied with main model (not worse, template's `>` check just doesn't have a "tied" case); all 3 assertions passed. `docs/units/0020-hands-on-feature-choice.md`. |
-| Cell 22 (Part 8 — Assessment: 5-scenario quiz, 2 L4 assertions incl. DoD formalization) | (C2 pending) | **Pilot-verified ✅ ran as `[15]`** — 5/5 (100%), all scenarios correct; both assertions passed, including `score == 5` proving DoD item 6. `docs/units/0022-assessment-ml-types.md`. |
+| Cell 22 (Part 8 — Assessment: 5-scenario quiz, 2 L4 assertions incl. DoD formalization) | `3ade4bc` | **Pilot-verified ✅ ran as `[15]`** — 5/5 (100%), all scenarios correct; both assertions passed, including `score == 5` proving DoD item 6. `docs/units/0022-assessment-ml-types.md`. |
+| Cell 25 (Your Reflection — markdown, no execution) | (C2 pending) | Drafted by Agent from the corrected reflective journal, revised per Pilot's edit request (no em dashes, simpler wording), applied to the notebook cell verbatim. All 8 fields filled, including "Questions for further exploration." No execution proof needed (markdown cell). Deliverable 2 (`L03Journal_R_SingleEpoch_ITAI1371.pdf`) matches this content. |
 
 ---
 
@@ -166,3 +167,6 @@
 | 2026-09-11 23:17 | Cell 22 C1 approved, prepared, Pilot-verified + C2 | C1 approved: 5-scenario assessment quiz (supervised/unsupervised/reinforcement recognition). Two added L4 assertions: input-count alignment; `score == 5`, formalizing DoD item 6 ("Assessment answers 5/5") as something the code proves rather than an eyeballed printed score. Pilot ran it: `[15]` — 5/5 (100%), both assertions passed. `docs/units/0022-assessment-ml-types.md` written and lints clean. `scripts/execution_proof_gate.py` re-run after adding Cell 22: ✅ PASS. Only markdown-only cells (23, 24, 25, 26) remain in the notebook. |
 | 2026-09-11 | Report published + Cells 23/24 confirmed static | Full build report published as an Artifact ("The SingleEpoch Ledger" — https://claude.ai/code/artifact/54b567b5-e1f0-41cd-bc9f-8e0cf637774f), pinned to the Pilot's sidebar. Read Cells 23 (Real-World Case Studies) and 24 (Workflow Summary) in full: both confirmed fully static markdown, no TODOs or blanks, no C1 needed. |
 | 2026-09-11 | **Checkpoint — Pilot break** | Pilot requested a pause. All documents (`progress.md`, `checkpoints.md`) confirmed current: last commit `3ade4bc` (Cell 22) is pushed and CI-checked, all 4 ADR 0005 invariants pass, working tree has no uncommitted notebook/code changes. Nothing mid-flight — next action on resume is Cell 25 (Reflection), a Pilot-authored markdown cell, not an Agent build step. Cold Start on return: re-read this Snapshot, confirm branch/last-commit match, re-run the Setup Gate, then proceed to Cell 25. |
+| 2026-09-12 | Export toolchain set up (ADR 0006) | Pilot asked to convert the notebook to PDF. Deferred pending Cell 25 (Pilot's choice) and switched export method from the originally-locked Colab path to local `nbconvert --to webpdf`, requiring the Pilot's explicit sign-off since it overrides a locked constraint — logged as ADR 0006 + a Contract Drift. `playwright` + Chromium installed into `.venv`; dry-run against the in-progress notebook produced a clean 768KB PDF (discarded — test only), confirming the toolchain works before it's used for real. |
+| 2026-09-12 | Reflection journal drafted, reviewed, corrected (Deliverable 2) | Pilot wrote a standalone reflective journal PDF at repo root. First draft reviewed: content complete (8/8 fields incl. "Questions for further exploration" — the Attempt-1 gap), but Section 3 claimed the Decision Tree overfit, which **contradicts Cell 16's own learning-curve result** (gap 0.038, flagged healthy, same as Logistic Regression's 0.035) — flagged as a factual error, not accepted as-is. Real-World Application section also missing an explicit "Type of ML" field. Pilot revised both; second draft reviewed and confirmed correct on both points. Renamed to spec-exact `L03Journal_R_SingleEpoch_ITAI1371.pdf` (`specs/Product_Spec.md` §3); the inadequate first draft removed (both files were untracked, nothing lost). |
+| 2026-09-12 | Cell 25 filled in-notebook | Checked whether the notebook's own Cell 25 (not just the standalone journal PDF) had been completed — it was still the unfilled bracket template. Drafted matching content from the corrected journal, revised per Pilot's request (no em dashes, simpler sentence structure, same key concepts, kept professional), applied to the notebook cell via a validated JSON round-trip. All 8 fields filled; no execution proof needed (markdown cell, no counter). Also caught and fixed: the current notebook's execution counters run `[3]`–`[15]`, not `[1]`–`[15]` — built incrementally across sessions, never one continuous fresh run, so the C5 gate's "kernel restart → run-all, counters [1..N], zero gaps" requirement is not yet satisfied. Flagged as the next blocking step before real PDF export. |
