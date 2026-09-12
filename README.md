@@ -23,6 +23,28 @@ The notebook walks through the full supervised-learning pipeline end to end:
 3. Prepare features, split into train/test, and standardize (scaler fit on the training set only).
 4. Train two models — Logistic Regression and a Decision Tree — and compare them.
 5. Evaluate with accuracy, a classification report, and a confusion matrix, then interpret the results.
+6. Run a **learning-curve analysis** on both models to check for overfitting — see [Results](#results) below.
+
+Every step includes integrity checks (shape, alignment, and range assertions) so a mistake in an
+earlier cell fails loudly instead of silently producing a wrong result downstream.
+
+## Results
+
+**Logistic Regression** is the best-performing model, reaching **91.7% test accuracy**, ahead of
+the Decision Tree's 83.3%.
+
+The learning-curve check below is the strongest evidence in the project that this result is
+trustworthy rather than a lucky split: both models' training and validation accuracy converge as
+training size grows, with small final gaps (0.035 for Logistic Regression, 0.038 for the Decision
+Tree) — direct evidence that neither model memorized the training data.
+
+![Learning curves for Logistic Regression and Decision Tree, showing training and validation accuracy converging as training set size increases](assets/learning_curves.png)
+
+This also settles which model actually explains the accuracy gap between them: the Decision Tree
+scored lower not because it overfit (its own gap is just as healthy as Logistic Regression's), but
+because a tree capped at `max_depth=3` can only draw a small number of boxy decision boundaries —
+a worse geometric fit for how the three wine classes separate than the smooth line Logistic
+Regression draws.
 
 ## Dataset
 
@@ -35,6 +57,7 @@ continuous chemical-analysis features, labeled across 3 classes. No external dow
 ```
 .
 ├── Module_03_Lab_Exercise.ipynb   # main notebook (analysis + models)
+├── assets/                        # exported chart images (e.g. learning curves)
 ├── requirements.txt               # Python dependencies
 ├── scripts/setup_gate.py          # environment / dependency check
 ├── src/                           # supporting implementation code
@@ -88,11 +111,11 @@ requirements are captured under [`specs/`](specs/).
 
 ## Deliverables
 
-| # | Deliverable | Format |
-| --- | --- | --- |
-| 1 | Executed notebook with all outputs | PDF |
-| 2 | Reflective journal | PDF (1–2 pages) |
-| 3 | Contribution journal | PDF (1–2 pages) |
+| # | Deliverable | Format | File |
+| --- | --- | --- | --- |
+| 1 | Executed notebook with all outputs | PDF | `L03_SingleEpoch_ITAI1371.pdf` |
+| 2 | Reflective journal | PDF (1–2 pages) | [`L03Journal_R_SingleEpoch_ITAI1371.pdf`](L03Journal_R_SingleEpoch_ITAI1371.pdf) |
+| 3 | Contribution journal | PDF (1–2 pages) | [`L03Journal_C_SingleEpoch_ITAI1371.pdf`](L03Journal_C_SingleEpoch_ITAI1371.pdf) |
 
 ## License
 

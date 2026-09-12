@@ -25,10 +25,17 @@
   restart/run-all below, so it goes in as part of a clean final state, not a partial one).
 - **Working Branch:** `build/lab03-josephclay` (`main` is Production/Locked — never coded on directly)
 - **Last Checkpoint:** **C2 `3ade4bc`** (2026-09-11 23:17) — Cell 22, last committed unit.
-- **Deliverable 2 done:** `L03Journal_R_SingleEpoch_ITAI1371.pdf` (2 pp, matches Cell 25's content,
-  including the corrected Decision-Tree analysis — it did NOT overfit per Cell 16's learning
-  curve; the accuracy gap is decision-boundary shape, not memorization). Not yet committed to the
-  repo (Pilot review pending).
+- **Deliverable 2 done & committed:** `L03Journal_R_SingleEpoch_ITAI1371.pdf` (2 pp, matches
+  Cell 25's content, including the corrected Decision-Tree analysis — it did NOT overfit per
+  Cell 16's learning curve; the accuracy gap is decision-boundary shape, not memorization).
+- **Deliverable 3 done, pending commit:** `L03Journal_C_SingleEpoch_ITAI1371.pdf` — solo
+  contribution journal, drafted in plain first-person terms (no internal process/tooling jargon
+  exposed per Pilot's request), covering the full workflow, the verify-before-proceeding habit,
+  the Learning-Curve addition as the standout piece of extra work, and the running-notes habit
+  that fed the reflection. Built as HTML → PDF via Playwright (the same toolchain from ADR 0006).
+- **README updated:** added a Results section with the actual Learning-Curve PNG
+  (`assets/learning_curves.png`, extracted from Cell 16's real saved output) and the 91.7%/0.917
+  headline numbers; Deliverables table now links the two completed PDFs.
 - **Full build report:** [The SingleEpoch Ledger](https://claude.ai/code/artifact/54b567b5-e1f0-41cd-bc9f-8e0cf637774f)
   — methodology, results, governance, and every bug caught pre-run (predates Cell 25/journal work).
 - **Next Single Action:** Pilot does **one clean kernel restart → Run All**, top to bottom, all
@@ -36,7 +43,7 @@
   with zero gaps (currently `[3]`–`[15]`, built incrementally across sessions — the C5 gate
   requires one continuous fresh run). Visual audit (no clipping/margin issues), save, then Agent
   runs `nbconvert --to webpdf` (ADR 0006) and names the result `L03_SingleEpoch_ITAI1371.pdf`
-  (Deliverable 1). Deliverable 3 (contribution journal) still needed. Then C4 Reflection Interview.
+  (Deliverable 1 — the only one left). Then C4 Reflection Interview.
 - **⚠️ Resolved reminder:** the Attempt-1 "Questions for further exploration" gap (2026-09-10,
   Viswanatha Rao feedback) is now closed in both Cell 25 and Deliverable 2 — kept here as a record,
   not an open risk.
@@ -170,3 +177,4 @@
 | 2026-09-12 | Export toolchain set up (ADR 0006) | Pilot asked to convert the notebook to PDF. Deferred pending Cell 25 (Pilot's choice) and switched export method from the originally-locked Colab path to local `nbconvert --to webpdf`, requiring the Pilot's explicit sign-off since it overrides a locked constraint — logged as ADR 0006 + a Contract Drift. `playwright` + Chromium installed into `.venv`; dry-run against the in-progress notebook produced a clean 768KB PDF (discarded — test only), confirming the toolchain works before it's used for real. |
 | 2026-09-12 | Reflection journal drafted, reviewed, corrected (Deliverable 2) | Pilot wrote a standalone reflective journal PDF at repo root. First draft reviewed: content complete (8/8 fields incl. "Questions for further exploration" — the Attempt-1 gap), but Section 3 claimed the Decision Tree overfit, which **contradicts Cell 16's own learning-curve result** (gap 0.038, flagged healthy, same as Logistic Regression's 0.035) — flagged as a factual error, not accepted as-is. Real-World Application section also missing an explicit "Type of ML" field. Pilot revised both; second draft reviewed and confirmed correct on both points. Renamed to spec-exact `L03Journal_R_SingleEpoch_ITAI1371.pdf` (`specs/Product_Spec.md` §3); the inadequate first draft removed (both files were untracked, nothing lost). |
 | 2026-09-12 | Cell 25 filled in-notebook | Checked whether the notebook's own Cell 25 (not just the standalone journal PDF) had been completed — it was still the unfilled bracket template. Drafted matching content from the corrected journal, revised per Pilot's request (no em dashes, simpler sentence structure, same key concepts, kept professional), applied to the notebook cell via a validated JSON round-trip. All 8 fields filled; no execution proof needed (markdown cell, no counter). Also caught and fixed: the current notebook's execution counters run `[3]`–`[15]`, not `[1]`–`[15]` — built incrementally across sessions, never one continuous fresh run, so the C5 gate's "kernel restart → run-all, counters [1..N], zero gaps" requirement is not yet satisfied. Flagged as the next blocking step before real PDF export. |
+| 2026-09-12 | Deliverable 3 drafted + README updated with real learning-curve chart | Extracted the actual Learning-Curve PNG from Cell 16's saved output (`assets/learning_curves.png`, 43,935 bytes, verified by viewing it) and added a Results section to README.md with it plus the 91.7%/0.917 headline and the Decision-Tree shape-not-overfitting explanation. Drafted `L03Journal_C_SingleEpoch_ITAI1371.pdf` (Deliverable 3, solo contribution journal) per Pilot's instruction to describe the work in plain first-person terms without exposing the internal build process/tooling vocabulary — covers the full workflow, the verify-before-proceeding habit, the Learning-Curve analysis as the standout addition beyond the base assignment, and the running-notes habit. Built as HTML rendered to PDF via the same Playwright toolchain from ADR 0006 (a generic document render, not a notebook export — no execution involved). One cosmetic defect caught and fixed before finalizing: a static "Page 1" footer landed on the actual page 2 once content overflowed; removed rather than mislabeled. |
