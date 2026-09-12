@@ -80,6 +80,7 @@ See `docs/adr/0005-per-unit-documentation-enrichment.md` for full rationale.
 | Gate | Status | Date/Time (CT) | Pilot Sign-off | Notes |
 | --- | --- | --- | --- | --- |
 | C0 | **APPROVED** | 2026-09-11 05:07 | Joseph Clay ("Commence") | Step 0 + Setup Gate PASS accepted; risks resolved: ADR 0002 (py-version), solo member Joseph Clay, due Sept 10→11 (Canvas discrepancy). Construction authorized. |
+| C5 | **PASSED** | 2026-09-12 11:35 | Joseph Clay (confirmed visual audit) | Kernel restart → Run All: counters `[1]`–`[13]`, zero gaps, zero errors, all key results reproduced exactly (deterministic, `random_state=42`). Export via ADR 0006 (amended): first `--to webpdf` attempt clipped long code lines — caught by reading the actual rendered pages, not just checking exit code — refined to `--to html` + a wrap-CSS patch + Playwright render. Re-verified page by page: no clipping, both EDA charts, the confusion matrix, and the learning-curve chart all render fully. `L03_SingleEpoch_ITAI1371.pdf`, 23 pages. |
 
 ---
 

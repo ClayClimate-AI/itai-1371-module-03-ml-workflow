@@ -51,3 +51,24 @@ heavy (a full TeX distribution); Playwright + a headless Chromium download is fa
   covers "does it run clean," just not "does it export clean on another platform").
 - `--to webpdf`'s image-alt-text warnings (3 images, expected — the matplotlib figures have no alt
   text) are cosmetic and don't block export; not an accessibility requirement this project scoped.
+
+## Amendment (2026-09-12) — refined export method after a real visual-audit failure
+
+The C5 visual audit caught a genuine defect in `--to webpdf`'s default output: long code lines
+(e.g. a multi-name `from sklearn.metrics import ...`, several assert messages) were clipped at the
+page edge instead of wrapping, because the default template's `<pre>` blocks use browser-default
+`white-space: pre` with no line-wrap CSS. This is exactly the "no clipping" check the gate exists
+to catch, so the first export was not accepted.
+
+**Revised export procedure:**
+1. `jupyter nbconvert --to html` (renders already-saved outputs, still no `--execute`).
+2. Inject one `<style>` override before `</head>`: forces `.highlight pre`, `pre`, and output-area
+   text to `white-space: pre-wrap; word-break: break-word; overflow-wrap: anywhere`, and images to
+   `max-width: 100%`.
+3. Render the patched HTML to PDF via Playwright directly (`page.pdf(...)`) — the same engine
+   `--to webpdf` uses internally, just with the CSS fix applied and full margin control.
+
+Re-verified by reading the actual rendered pages (not just checking for a zero exit code): the
+previously-clipped lines now wrap correctly, both EDA charts and the confusion matrix render
+uncut, and the two-panel learning-curve chart is fully visible. Final artifact: 23 pages,
+`L03_SingleEpoch_ITAI1371.pdf`.
