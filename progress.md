@@ -17,12 +17,12 @@
 
 ## Snapshot
 
-- **Current Stage:** **C0 through C5 all passed. All three graded deliverables committed and
-  pushed. C4 Reflection Interview complete (short form, verbatim, `reflections.md`).** The
-  Builder Loop's DoD is fully met. Remaining work is repository closure only: open a PR from
-  `build/lab03-josephclay` into `main` once CI is confirmed green on this branch's final state.
-- **Working Branch:** `build/lab03-josephclay` (`main` is Production/Locked — never coded on directly)
-- **Last Checkpoint:** **C4 PASSED (short form)** (2026-09-12) — see `checkpoints.md` Checkpoint
+- **Current Stage:** **PROJECT COMPLETE.** PR #1 merged into `main` (merge commit `33ec34a`) —
+  30 commits, 39 files, both CI checks (push + pull_request) green. C0 through C5 all passed, C4
+  Reflection Interview complete, all three graded deliverables shipped. Nothing outstanding.
+- **Working Branch:** `main` now holds the full, merged build. `build/lab03-josephclay` remains as
+  the historical record of the incremental C1/C2 loop; no further work is expected on it.
+- **Last Checkpoint:** **Merged to `main`** (2026-09-12, PR #1) — see `checkpoints.md` Checkpoint
   Ledger for the full C0–C5 record.
 - **Deliverable 1:** `L03_SingleEpoch_ITAI1371.pdf` — 23 pages, one continuous kernel restart →
   Run All (counters `[1]`–`[13]`, zero errors, zero gaps, all results reproduced exactly). First
@@ -40,12 +40,8 @@
   the 91.7%/0.917 headline; Deliverables table links all three PDFs.
 - **Full build report:** [The SingleEpoch Ledger](https://claude.ai/code/artifact/54b567b5-e1f0-41cd-bc9f-8e0cf637774f)
   — methodology, results, governance, and every bug caught pre-run (predates the C5/C4 work above).
-- **Next Single Action:** CI confirmed green on `990d367` (run #26). **`main` did not exist on the
-  remote at all** (`git ls-remote` showed only `build/lab03-josephclay`) — created it at the first
-  commit (`e5b1a4d`, the pre-flight scaffold) so the PR is a genuine, reviewable diff of the whole
-  build, per ADR 0001's collaborative-workflow intent. Pilot to open the PR (no `gh` auth in this
-  environment to do it programmatically) at the compare URL, using the drafted title/description
-  provided. Merge once reviewed.
+- **Next Single Action:** None — build complete. If resumed later (e.g., a Module 4 follow-on or a
+  resubmission), start from a fresh branch off `main`, not `build/lab03-josephclay`.
 - **⚠️ Resolved reminder:** the Attempt-1 "Questions for further exploration" gap (2026-09-10,
   Viswanatha Rao feedback) is now closed in both Cell 25 and Deliverable 2 — kept here as a record,
   not an open risk.
@@ -184,3 +180,4 @@
 | 2026-09-12 11:38 | Deliverable 1 exported, real clipping bug found + fixed (ADR 0006 amended) | First export attempt: `jupyter nbconvert --to webpdf`. Read the actual rendered pages (not just checked for a zero exit code) and found several long code lines clipped at the page edge -- `from sklearn.metrics import ...`, an f-string list comprehension, and multiple assert messages -- because the default template's `<pre>` blocks don't wrap. **Not accepted as-is.** Refined the export: `nbconvert --to html`, injected a `<style>` override forcing code/output text to wrap and images to `max-width:100%`, then rendered the patched HTML to PDF directly via Playwright. Re-verified page by page: previously-clipped lines now wrap correctly; both EDA charts, the confusion matrix, and the two-panel learning-curve chart all render fully, nothing cut off. Final: `L03_SingleEpoch_ITAI1371.pdf`, 23 pages. ADR 0006 amended with the refined procedure; `checkpoints.md` Checkpoint Ledger gets its first C5 row. |
 | 2026-09-12 | C4 Reflection Interview (short form) | Pilot questioned whether C4 was necessary given content overlap with Cell 25/Deliverable 3 -- clarified the distinction (C4 covers the build *process*: comprehension, verification methods, contract drift, local-vs-objective proof; Cell 25/Deliverable 3 cover the ML *content*) and that C4 is a self-imposed DoD item (item 9), not one of the 3 graded deliverables. Pilot chose to do a short version anyway. Asked 4 of 5 blueprint dimensions (territory novelty omitted at Pilot's discretion), each question drawn from this project's own trail rather than generic prompts. Pilot answered all 4 across two messages; recorded verbatim in `reflections.md` with no paraphrasing or cleanup, per the blueprint's explicit requirement. `checkpoints.md` Checkpoint Ledger gets its C4 row. **All C0-C5 gates now passed; DoD fully met.** |
 | 2026-09-12 12:25 | CI confirmed green; `main` created | Pilot confirmed via the Actions tab that run #26 (`990d367`, the C4 commit) is green -- the objective proof for the branch's final state. Went to open the PR into `main` per ADR 0001 and found `main` did not exist on the remote at all (`git ls-remote --heads origin` returned only `build/lab03-josephclay`) -- the collaborative-workflow contract had never actually been completed. Professional fix, not a workaround: created `main` at the first commit (`e5b1a4d`, the pre-flight scaffold) rather than at the current tip, so the PR captures the entire build as a real, reviewable diff instead of an empty one. No `gh` auth available in this environment to open the PR programmatically -- provided the compare URL and a drafted title/description for the Pilot to submit directly. |
+| 2026-09-12 12:46 | **PR #1 merged — project complete** | Pilot opened the PR (revising the title/description together for industry-standard tone: dropped internal gate jargon like "C0-C5" from the title, tightened wording, kept the ADR/verification references since those are genuine real-world practice). Both CI checks (on push, on pull_request) passed; PR showed "Ready to merge." Pilot merged: 30 commits, 39 files (+2,648/-233) into `main`, merge commit `33ec34a`. Confirmed via `git fetch` + `git log origin/main`. This closes the entire build: C0-C5 all passed, C4 verbatim transcript recorded, all three graded deliverables shipped, `main` established as the real production branch this project's own contract always assumed existed. |
