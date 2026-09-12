@@ -81,6 +81,7 @@ See `docs/adr/0005-per-unit-documentation-enrichment.md` for full rationale.
 | --- | --- | --- | --- | --- |
 | C0 | **APPROVED** | 2026-09-11 05:07 | Joseph Clay ("Commence") | Step 0 + Setup Gate PASS accepted; risks resolved: ADR 0002 (py-version), solo member Joseph Clay, due Sept 10→11 (Canvas discrepancy). Construction authorized. |
 | C5 | **PASSED** | 2026-09-12 11:35 | Joseph Clay (confirmed visual audit) | Kernel restart → Run All: counters `[1]`–`[13]`, zero gaps, zero errors, all key results reproduced exactly (deterministic, `random_state=42`). Export via ADR 0006 (amended): first `--to webpdf` attempt clipped long code lines — caught by reading the actual rendered pages, not just checking exit code — refined to `--to html` + a wrap-CSS patch + Playwright render. Re-verified page by page: no clipping, both EDA charts, the confusion matrix, and the learning-curve chart all render fully. `L03_SingleEpoch_ITAI1371.pdf`, 23 pages. |
+| C4 | **PASSED (short form)** | 2026-09-12 | Joseph Clay | Dynamic interview per §3.4, 4 of 5 blueprint dimensions (territory novelty omitted at Pilot's discretion — noted, not silently dropped). Verbatim transcript in `reflections.md`, unedited. Questions drawn from this project's own trail: L3-vs-L4 distinction (CI vs. the scaling-order assertion), the 4 pre-run bugs caught by reading vs. running, the Learning-Curve contract-drift amendment, and the Cell 3/5 false-verification failure. |
 
 ---
 

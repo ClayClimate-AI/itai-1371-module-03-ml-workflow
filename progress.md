@@ -17,33 +17,31 @@
 
 ## Snapshot
 
-- **Current Stage:** **C5 Export Gate PASSED.** All three graded deliverables exist. DoD item 1
-  (all cells execute sequentially, counters `[1]..[N]`, zero gaps) is now genuinely satisfied by
-  one continuous kernel restart → Run All, not the incremental build history. DoD item 5
-  (Learning-Curve check) complete. Remaining work is process-closure only: commit Deliverable 1 +
-  the fresh notebook state, then the C4 Reflection Interview.
+- **Current Stage:** **C0 through C5 all passed. All three graded deliverables committed and
+  pushed. C4 Reflection Interview complete (short form, verbatim, `reflections.md`).** The
+  Builder Loop's DoD is fully met. Remaining work is repository closure only: open a PR from
+  `build/lab03-josephclay` into `main` once CI is confirmed green on this branch's final state.
 - **Working Branch:** `build/lab03-josephclay` (`main` is Production/Locked — never coded on directly)
-- **Last Checkpoint:** **C5 PASSED** (2026-09-12 11:38) — see `checkpoints.md` Checkpoint Ledger.
-- **Deliverable 1 done, pending commit:** `L03_SingleEpoch_ITAI1371.pdf` — 23 pages, kernel
-  restart → Run All (counters `[1]`–`[13]`, zero errors, zero gaps, all results reproduced
-  exactly). First export attempt (`nbconvert --to webpdf`) clipped long code lines on the page
-  edge — caught by the visual audit, not accepted, refined per ADR 0006's amendment (`--to html` +
-  a wrap-CSS patch + Playwright render). Re-verified page by page after the fix.
-- **Deliverable 2 done & committed:** `L03Journal_R_SingleEpoch_ITAI1371.pdf` (2 pp, matches
-  Cell 25's content, including the corrected Decision-Tree analysis — it did NOT overfit per
-  Cell 16's learning curve; the accuracy gap is decision-boundary shape, not memorization).
-- **Deliverable 3 done, pending commit:** `L03Journal_C_SingleEpoch_ITAI1371.pdf` — solo
-  contribution journal, drafted in plain first-person terms (no internal process/tooling jargon
-  exposed per Pilot's request), covering the full workflow, the verify-before-proceeding habit,
-  the Learning-Curve addition as the standout piece of extra work, and the running-notes habit
-  that fed the reflection. Built as HTML → PDF via Playwright (the same toolchain from ADR 0006).
-- **README updated:** added a Results section with the actual Learning-Curve PNG
-  (`assets/learning_curves.png`, extracted from Cell 16's real saved output) and the 91.7%/0.917
-  headline numbers; Deliverables table now links all three completed PDFs.
+- **Last Checkpoint:** **C4 PASSED (short form)** (2026-09-12) — see `checkpoints.md` Checkpoint
+  Ledger for the full C0–C5 record.
+- **Deliverable 1:** `L03_SingleEpoch_ITAI1371.pdf` — 23 pages, one continuous kernel restart →
+  Run All (counters `[1]`–`[13]`, zero errors, zero gaps, all results reproduced exactly). First
+  export attempt clipped long code lines; caught by the visual audit, refined per ADR 0006's
+  amendment, re-verified page by page.
+- **Deliverable 2:** `L03Journal_R_SingleEpoch_ITAI1371.pdf` — reflective journal, 2 pp, including
+  the corrected Decision-Tree analysis (it did NOT overfit per Cell 16; the accuracy gap is
+  decision-boundary shape, not memorization).
+- **Deliverable 3:** `L03Journal_C_SingleEpoch_ITAI1371.pdf` — solo contribution journal, plain
+  first-person terms, leads with the Learning-Curve addition as the standout piece of extra work.
+- **C4 transcript:** `reflections.md` — 4 verbatim answers (comprehension, verification methods,
+  contract drift, local-vs-objective proof); territory novelty omitted at Pilot's discretion, noted
+  not silently dropped.
+- **README:** Results section with the real Learning-Curve PNG (`assets/learning_curves.png`) and
+  the 91.7%/0.917 headline; Deliverables table links all three PDFs.
 - **Full build report:** [The SingleEpoch Ledger](https://claude.ai/code/artifact/54b567b5-e1f0-41cd-bc9f-8e0cf637774f)
-  — methodology, results, governance, and every bug caught pre-run (predates Cell 25/journal/export work).
-- **Next Single Action:** Commit the fresh notebook state (`[1]`–`[13]` counters) and all three PDF
-  deliverables, then hold the C4 Reflection Interview (dynamic verbatim Q&A) before merging to `main`.
+  — methodology, results, governance, and every bug caught pre-run (predates the C5/C4 work above).
+- **Next Single Action:** Confirm CI is green on `build/lab03-josephclay`'s latest commit, then
+  open a PR into `main` per the collaborative Git workflow (ADR 0001).
 - **⚠️ Resolved reminder:** the Attempt-1 "Questions for further exploration" gap (2026-09-10,
   Viswanatha Rao feedback) is now closed in both Cell 25 and Deliverable 2 — kept here as a record,
   not an open risk.
@@ -180,3 +178,4 @@
 | 2026-09-12 | Deliverable 3 drafted + README updated with real learning-curve chart | Extracted the actual Learning-Curve PNG from Cell 16's saved output (`assets/learning_curves.png`, 43,935 bytes, verified by viewing it) and added a Results section to README.md with it plus the 91.7%/0.917 headline and the Decision-Tree shape-not-overfitting explanation. Drafted `L03Journal_C_SingleEpoch_ITAI1371.pdf` (Deliverable 3, solo contribution journal) per Pilot's instruction to describe the work in plain first-person terms without exposing the internal build process/tooling vocabulary — covers the full workflow, the verify-before-proceeding habit, the Learning-Curve analysis as the standout addition beyond the base assignment, and the running-notes habit. Built as HTML rendered to PDF via the same Playwright toolchain from ADR 0006 (a generic document render, not a notebook export — no execution involved). One cosmetic defect caught and fixed before finalizing: a static "Page 1" footer landed on the actual page 2 once content overflowed; removed rather than mislabeled. |
 | 2026-09-12 11:35 | **C5 Export Gate: kernel restart + Run All** | Pilot clicked Restart then Run All (per instructions -- no combined button in this editor). Verified directly: execution counters `[1]`–`[13]` across all 13 code cells, zero gaps, zero error outputs, and every key number reproduced exactly (0.917 accuracy, 0.035/0.038 learning-curve gaps, 5/5 assessment) -- confirming determinism (`random_state=42`) rather than assuming it. This is the first genuinely continuous fresh run in this build; all prior work was incremental across sessions with counters starting above `[1]`. Pilot confirmed the visual audit (no clipping/margin issues) directly in the editor. |
 | 2026-09-12 11:38 | Deliverable 1 exported, real clipping bug found + fixed (ADR 0006 amended) | First export attempt: `jupyter nbconvert --to webpdf`. Read the actual rendered pages (not just checked for a zero exit code) and found several long code lines clipped at the page edge -- `from sklearn.metrics import ...`, an f-string list comprehension, and multiple assert messages -- because the default template's `<pre>` blocks don't wrap. **Not accepted as-is.** Refined the export: `nbconvert --to html`, injected a `<style>` override forcing code/output text to wrap and images to `max-width:100%`, then rendered the patched HTML to PDF directly via Playwright. Re-verified page by page: previously-clipped lines now wrap correctly; both EDA charts, the confusion matrix, and the two-panel learning-curve chart all render fully, nothing cut off. Final: `L03_SingleEpoch_ITAI1371.pdf`, 23 pages. ADR 0006 amended with the refined procedure; `checkpoints.md` Checkpoint Ledger gets its first C5 row. |
+| 2026-09-12 | C4 Reflection Interview (short form) | Pilot questioned whether C4 was necessary given content overlap with Cell 25/Deliverable 3 -- clarified the distinction (C4 covers the build *process*: comprehension, verification methods, contract drift, local-vs-objective proof; Cell 25/Deliverable 3 cover the ML *content*) and that C4 is a self-imposed DoD item (item 9), not one of the 3 graded deliverables. Pilot chose to do a short version anyway. Asked 4 of 5 blueprint dimensions (territory novelty omitted at Pilot's discretion), each question drawn from this project's own trail rather than generic prompts. Pilot answered all 4 across two messages; recorded verbatim in `reflections.md` with no paraphrasing or cleanup, per the blueprint's explicit requirement. `checkpoints.md` Checkpoint Ledger gets its C4 row. **All C0-C5 gates now passed; DoD fully met.** |
