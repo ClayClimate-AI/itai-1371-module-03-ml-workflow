@@ -18,14 +18,17 @@
 ## Snapshot
 
 - **Current Stage:** Builder Loop (Phase 2) — C0 APPROVED. DoD item 5 (Learning-Curve check,
-  27 cells) is complete. Cells 3, 5, 6, 8, 10, 11, 12, 13, 14, 16, 18, 20 committed & Pilot-verified
-  with real execution proof (`[3]`–`[14]`, no gaps). Cell 22 (Part 8 — Assessment) is next.
+  27 cells) is complete. Cells 3, 5, 6, 8, 10, 11, 12, 13, 14, 16, 18, 20, 22 committed &
+  Pilot-verified with real execution proof (`[3]`–`[15]`, no gaps). Only markdown-only cells (23,
+  24, 25, 26) remain — Cell 25 is the flagged one (Attempt-1 reflection reminder below).
 - **Working Branch:** `build/lab03-josephclay` (`main` is Production/Locked — never coded on directly)
-- **Last Checkpoint:** **C2 (pending hash)** (2026-09-11 23:11) — Cell 20 execution proof captured
-  (X_your (178,3), accuracy 0.917 tied with main model, 3 assertions passed).
-- **Next Single Action:** Pilot to approve the **C1 P-I-O-F for Cell 22 (Part 8 — Assessment: 5
-  scenario Q&A)**. On approval, prepare the unit per ADR 0005 (P-I-O-F + the 6 enrichment fields
-  in `docs/units/0022-*.md`), Pilot runs it, then C2.
+- **Last Checkpoint:** **C2 (pending hash)** (2026-09-11 23:17) — Cell 22 execution proof captured
+  (5/5, 100%, both assertions passed incl. `score == 5` DoD formalization).
+- **Next Single Action:** Cells 23/24 are static markdown (case studies, workflow summary) — likely
+  just a Pilot read-through, no C1 needed unless edits are wanted. Cell 25 (Reflection) needs the
+  Pilot's own written answers, **including "Questions for further exploration."** Cell 26 (Lab
+  Summary) is static. Confirm how you want to handle 23/24/26 (skip vs. formal C1), then move to
+  Cell 25.
 - **⚠️ Standing reminder (do not lose on Cold Start):** this build is **Attempt 2** of this exact
   lab. Attempt 1's grading feedback (2026-09-10, Viswanatha Rao, 100/100 with a -2/+2 offset)
   docked points specifically for leaving Cell 25's "Questions for further exploration" blank. See
@@ -90,7 +93,8 @@
 | Cell 14 (Part 5 Step 5 — Model Interpretation: confusion matrix, 3 L4 assertions incl. cross-check) | `77f322d` | **Pilot-verified ✅ ran as `[11]`** — cm diagonal 12+14+7=33/36=0.917, matches Cell 13 exactly (cross-check assertion passed); class_2's 3 misses to class_1 confirm its 0.70 recall. `docs/units/0014-confusion-matrix.md`. |
 | Cell 16 (Step 6, Amendment — Learning Curves overfitting check, new cell, 2 L4 assertions) | `1a18275` | **Pilot-verified ✅ ran as `[12]`** — LogReg gap 0.035, Tree gap 0.038, both ✅ healthy generalization; **DoD item 5 (27 cells) now complete**. `docs/units/0016-learning-curves-overfitting-check.md`. |
 | Cell 18 (Part 6 — Data Types in ML, 2 L4 assertions) | `197620d` | **Pilot-verified ✅ ran as `[13]`** — all 6 categories printed a real use-case line, no silent blanks; both assertions passed. `docs/units/0018-data-types-in-ml.md`. |
-| Cell 20 (Part 7 — Hands-On feature choice: flavanoids/color_intensity/proline, 3 L4 assertions) | (C2 pending) | **Pilot-verified ✅ ran as `[14]`** — X_your (178,3), accuracy 0.917 exactly tied with main model (not worse, template's `>` check just doesn't have a "tied" case); all 3 assertions passed. `docs/units/0020-hands-on-feature-choice.md`. |
+| Cell 20 (Part 7 — Hands-On feature choice: flavanoids/color_intensity/proline, 3 L4 assertions) | `0252c9a` | **Pilot-verified ✅ ran as `[14]`** — X_your (178,3), accuracy 0.917 exactly tied with main model (not worse, template's `>` check just doesn't have a "tied" case); all 3 assertions passed. `docs/units/0020-hands-on-feature-choice.md`. |
+| Cell 22 (Part 8 — Assessment: 5-scenario quiz, 2 L4 assertions incl. DoD formalization) | (C2 pending) | **Pilot-verified ✅ ran as `[15]`** — 5/5 (100%), all scenarios correct; both assertions passed, including `score == 5` proving DoD item 6. `docs/units/0022-assessment-ml-types.md`. |
 
 ---
 
@@ -149,3 +153,4 @@
 | 2026-09-11 | Attempt-1 feedback logged | Pilot confirmed this build is **Attempt 2** of this exact lab (not a different assignment). Attempt 1's grading feedback (2026-09-10, Viswanatha Rao, 100/100 with a -2/+2 offset) specifically docked points for leaving Cell 25's "Questions for further exploration" blank. Logged as a standing reminder in the Snapshot and added to DoD item 6 in `docs/STEP0_Initial_Contract.md` so it surfaces on every Cold Start resume until Cell 25 is actually answered. |
 | 2026-09-11 22:58 | Cell 18 C1 approved, prepared, Pilot-verified + C2 | C1 approved: illustrate six ML data types (numerical continuous/discrete, categorical nominal/ordinal, text, boolean) with examples and use cases — first purely conceptual cell, no dependency on `df`/`X`/`y`/models. Two added L4 assertions: every category name matches a known use-case tag (catches a category silently printing a blank "Use case:" line if ever renamed); exactly 6 categories exist. Pilot ran it: `[13]` — all 6 blocks printed real use-case text, no blanks, both assertions passed. `docs/units/0018-data-types-in-ml.md` written and lints clean. `scripts/execution_proof_gate.py` re-run after adding Cell 18 to the Unit Log: ✅ PASS. |
 | 2026-09-11 23:11 | Cell 20 C1 approved, prepared, Pilot-verified + C2 | C1 approved: hands-on feature-choice task. Pilot chose `flavanoids`/`color_intensity`/`proline` (classically strong wine-cultivar separators) over the template's default, replacing the `TODO` — a direct follow-up to Cell 10's flagged limitation about the main model's less-differentiated features. Three added L4 assertions: `X_your.shape==(178,3)`; split accounting; accuracy range `[0,1]`. Pilot ran it: `[14]` — accuracy **0.917, an exact tie** with the main 4-feature model. Corrected post-run: the template's `if your_accuracy > results[...]` treats a tie as "not improved" and printed the 🤔 message, which is misleading — matching accuracy with one fewer feature is itself a real, worth-noting result, not underperformance. `docs/units/0020-hands-on-feature-choice.md` written, then corrected (Visual Sanity Check + Journal Point) to state this honestly — lints clean. `scripts/execution_proof_gate.py` re-run after adding Cell 20: ✅ PASS. |
+| 2026-09-11 23:17 | Cell 22 C1 approved, prepared, Pilot-verified + C2 | C1 approved: 5-scenario assessment quiz (supervised/unsupervised/reinforcement recognition). Two added L4 assertions: input-count alignment; `score == 5`, formalizing DoD item 6 ("Assessment answers 5/5") as something the code proves rather than an eyeballed printed score. Pilot ran it: `[15]` — 5/5 (100%), both assertions passed. `docs/units/0022-assessment-ml-types.md` written and lints clean. `scripts/execution_proof_gate.py` re-run after adding Cell 22: ✅ PASS. Only markdown-only cells (23, 24, 25, 26) remain in the notebook. |
