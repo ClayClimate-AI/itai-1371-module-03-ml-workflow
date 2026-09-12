@@ -18,14 +18,15 @@
 ## Snapshot
 
 - **Current Stage:** Builder Loop (Phase 2) — C0 APPROVED (DoD amended to 27 cells for the Learning-Curve
-  overfitting check). Cells 3, 5, 6, 8, 10 committed & Pilot-verified with real execution proof
-  (`[3]`/`[4]`/`[5]`/`[6]`/`[7]`). Cell 11 (Part 5 Step 2 — Data Splitting) is next.
+  overfitting check). Cells 3, 5, 6, 8, 10, 11 committed & Pilot-verified with real execution proof
+  (`[3]`/`[4]`/`[5]`/`[6]`/`[7]`/`[8]`). Cell 12 (Part 5 Step 3 — Model Training) is next.
 - **Working Branch:** `build/lab03-josephclay` (`main` is Production/Locked — never coded on directly)
-- **Last Checkpoint:** **C2 (pending hash)** (2026-09-11 13:12) — Cell 10 execution proof captured
-  (X shape (178,4), y shape (178,), alignment confirmed, 3 assertions passed).
-- **Next Single Action:** Pilot to approve the **C1 P-I-O-F for Cell 11 (Part 5 Step 2 — Data
-  Splitting: stratified 80/20 train/test split)**. On approval, prepare the unit per ADR 0005
-  (P-I-O-F + the 6 enrichment fields in `docs/units/0011-*.md`), Pilot runs it, then C2.
+- **Last Checkpoint:** **C2 (pending hash)** (2026-09-11 22:03) — Cell 11 execution proof captured
+  (142/36 stratified split, per-class accounting confirmed, 3 assertions passed).
+- **Next Single Action:** Pilot to approve the **C1 P-I-O-F for Cell 12 (Part 5 Step 3 — Model
+  Training: scale features fit-on-train-only, train Logistic Regression + Decision Tree)**. On
+  approval, prepare the unit per ADR 0005 (P-I-O-F + the 6 enrichment fields in
+  `docs/units/0012-*.md`), Pilot runs it, then C2.
   **Time-critical: completing Sept 11; critical path = 3 PDFs.**
 - **Blocking Gate:** C1 (per-unit P-I-O-F for Cell 10) — approval needed before the cell is prepared.
 
@@ -78,7 +79,8 @@
 | ADR 0005 (per-unit doc enrichment + 4 invariants) | `80d6b08`..`667ed10` | Accepted (2 amendments) |
 | Cell 6 (Part 3 — explore structure + L4 no-nulls assertion) | `00b9318` | **Pilot-verified ✅ ran as `[5]`** — 178 samples (class_1:71, class_0:59, class_2:48, sums to 178), 0 missing values, assertion passed. `docs/units/0006-explore-dataset-structure.md`. |
 | Cell 8 (Part 4 — EDA class distribution + correlation heatmap, 3 L4 assertions) | `9f9c3bc` | **Pilot-verified ✅ ran as `[6]`** — bar chart (71/59/48) + 6×6 correlation heatmap, diagonal all `1.00`; all 3 assertions passed; real `image/png` output captured. `docs/units/0008-eda-class-distribution-correlation.md`. |
-| Cell 10 (Part 5 Step 1 — Data Preparation: select X/y, 3 L4 assertions) | (C2 pending) | **Pilot-verified ✅ ran as `[7]`** — X shape (178,4), y shape (178,), alignment confirmed; all 3 assertions passed. `docs/units/0010-select-features-target.md`. |
+| Cell 10 (Part 5 Step 1 — Data Preparation: select X/y, 3 L4 assertions) | `b43a135` | **Pilot-verified ✅ ran as `[7]`** — X shape (178,4), y shape (178,), alignment confirmed; all 3 assertions passed. `docs/units/0010-select-features-target.md`. |
+| Cell 11 (Part 5 Step 2 — Data Splitting: stratified 80/20, 3 L4 assertions) | (C2 pending) | **Pilot-verified ✅ ran as `[8]`** — 142/36 split; train [47,57,38] + test [12,14,10] = original [59,71,48]; all 3 assertions passed. `docs/units/0011-train-test-split.md`. |
 
 ---
 
@@ -129,3 +131,4 @@
 | 2026-09-11 12:31 | Cell 6 C1 approved, prepared, Pilot-verified + C2 | C1 approved: dataset-overview cell + one added L4 assertion (`assert df.isnull().sum().sum() == 0`, proving the "no missing values" print rather than just stating it). Agent prepared the cell via a validated JSON round-trip (nbformat), then Pilot ran it: `[5]` — 178 samples, class_1:71/class_0:59/class_2:48 (sums to 178, Visual Sanity Check passed), 0 missing values, assertion passed. `docs/units/0006-explore-dataset-structure.md` written and lints clean. `scripts/execution_proof_gate.py` re-run after adding Cell 6 to the Unit Log: ✅ PASS. |
 | 2026-09-11 12:43 | Cell 8 C1 approved, prepared, Pilot-verified + C2 | C1 approved: first plot-producing cell in the notebook (class-distribution bar chart + 6-feature correlation heatmap) plus three added L4 assertions (class counts sum to 178; correlation matrix shape (6,6); diagonal all 1.0). Agent prepared the cell via a validated JSON round-trip, then Pilot ran it: `[6]` — bars at 71/59/48, heatmap diagonal all `1.00`, all assertions passed, real `image/png` output captured (not just text). `docs/units/0008-eda-class-distribution-correlation.md` written and lints clean. `scripts/execution_proof_gate.py` re-run after adding Cell 8 to the Unit Log: ✅ PASS. |
 | 2026-09-11 13:12 | Cell 10 C1 approved, prepared, Pilot-verified + C2 | C1 approved: first cell in the actual ML workflow section — select feature matrix `X` (4 of 13 features) and target `y` from `df`. Three added L4 assertions: `X.shape == (178, 4)`, `y.shape == (178,)`, and a `check_alignment` assertion (`list(X.index) == list(y.index)`). Agent prepared the cell via a validated JSON round-trip, then Pilot ran it: `[7]` — shapes correct, alignment confirmed, all assertions passed, preview matches. `docs/units/0010-select-features-target.md` written and lints clean. `scripts/execution_proof_gate.py` re-run after adding Cell 10 to the Unit Log: ✅ PASS. |
+| 2026-09-11 22:03 | Cell 11 C1 approved, prepared, Pilot-verified + C2 | C1 approved: stratified 80/20 train/test split — the boundary the whole overfitting question depends on. Three added L4 assertions: split accounting (`len(X_train)+len(X_test)==len(X)`), X/y alignment, and stratification actually held (`set(y_train.unique())==set(y_test.unique())==set(y.unique())`). Agent prepared the cell via a validated JSON round-trip, then Pilot ran it: `[8]` — 142/36 split, train [47,57,38] + test [12,14,10] = original [59,71,48] per class, all assertions passed. `docs/units/0011-train-test-split.md` written and lints clean. `scripts/execution_proof_gate.py` re-run after adding Cell 11 to the Unit Log: ✅ PASS. |
